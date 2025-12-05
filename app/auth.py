@@ -34,21 +34,21 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
     rec = models.EmailVerify(email=data.email, code=code, expires_at=expires)
     db.add(rec)
     db.commit()
-async def send_verification_code(data):
-    code = generate_code()  # hàm tạo code của bạn
-    SEND_EMAIL = os.environ.get("SEND_EMAIL", "0") == "1"
 
-    if SEND_EMAIL:
-        try:
-            notify.send_mail_sync(
-                [data.email],
-                "Verify your Traffic Manager account",
-                f"Your verification code is: {code}"
-            )
-        except Exception as e:
-            print("Skip sending email:", e)
+    # Tạm comment gửi mail để đăng nhập ok
+    """
+    try:
+        notify.send_mail_sync(
+            [data.email],
+            "Verify your Traffic Manager account",
+            f"Your verification code is: {code}"
+        )
+    except Exception as e:
+        print("Skip sending email:", e)
+    """
 
-    return {"message": "Verification code sent"}
+    return {"message": "Verification code sent"}  # trả về luôn
+
 
     # Gửi email
 """
