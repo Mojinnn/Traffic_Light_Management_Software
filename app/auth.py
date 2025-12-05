@@ -34,8 +34,24 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
     rec = models.EmailVerify(email=data.email, code=code, expires_at=expires)
     db.add(rec)
     db.commit()
+async def send_verification_code(data):
+    code = generate_code()  # hàm tạo code của bạn
+    SEND_EMAIL = os.environ.get("SEND_EMAIL", "0") == "1"
+
+    if SEND_EMAIL:
+        try:
+            notify.send_mail_sync(
+                [data.email],
+                "Verify your Traffic Manager account",
+                f"Your verification code is: {code}"
+            )
+        except Exception as e:
+            print("Skip sending email:", e)
+
+    return {"message": "Verification code sent"}
 
     # Gửi email
+"""
     notify.send_mail_sync(
         [data.email],
         "Verify your Traffic Manager account",
@@ -43,6 +59,7 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
     )
 
     return {"message": "Verification code sent"}
+"""
 
 @router.post("/register/confirm", response_model=schemas.UserOut)
 def confirm_register(data: schemas.RegisterConfirmIn, db: Session = Depends(get_db)):
