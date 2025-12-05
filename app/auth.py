@@ -19,6 +19,16 @@ def get_db():
     finally:
         db.close()
 
+@router.post("/register")
+def register(email: str, password: str, db: Session = Depends(get_db)):
+    if db.query(User).filter(User.email == email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
+    hashed = utils.hash_password(password)
+    user = User(email=email, hashed_password=hashed)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return {"email": user.email, "message": "Registered successfully"}
 # dangki
 @router.post("/register/send-code")
 def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)):
