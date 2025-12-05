@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+traffic.db
+*.sqlite
+node_modules/
+.env
