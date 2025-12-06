@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Header, Security
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from . import models, schemas, utils, database, notify
+#from . import models, schemas, utils, database, notify
 from jose import jwt, JWTError
 from .utils import create_access_token
 from typing import Optional
@@ -12,7 +12,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 router = APIRouter(prefix="/auth")
 import string
 import random
-
+from app.models import User
+from app import models, schemas, utils, database, notify
 def get_db():
     db = database.SessionLocal()
     try:
@@ -61,7 +62,7 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
     db.commit()
 
     # Tạm comment gửi mail để đăng nhập ok
-    """
+    
     try:
         notify.send_mail_sync(
             [data.email],
@@ -70,13 +71,12 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
         )
     except Exception as e:
         print("Skip sending email:", e)
-    """
-
+    
     return {"message": "Verification code sent"}  # trả về luôn
 
 
     # Gửi email
-"""
+
     notify.send_mail_sync(
         [data.email],
         "Verify your Traffic Manager account",
@@ -84,7 +84,7 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
     )
 
     return {"message": "Verification code sent"}
-"""
+
 
 @router.post("/register/confirm", response_model=schemas.UserOut)
 def confirm_register(data: schemas.RegisterConfirmIn, db: Session = Depends(get_db)):
