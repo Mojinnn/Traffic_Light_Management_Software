@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Header, Security
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-#from . import models, schemas, utils, database, notify
+from . import models, schemas, utils, database, notify
 from jose import jwt, JWTError
 from .utils import create_access_token
 from typing import Optional
@@ -12,8 +12,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 router = APIRouter(prefix="/auth")
 import string
 import random
-from app.models import User
-from app import models, schemas, utils, database, notify
+
 def get_db():
     db = database.SessionLocal()
     try:
