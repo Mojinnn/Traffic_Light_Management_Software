@@ -12,7 +12,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 router = APIRouter(prefix="/auth")
 import string
 import random
-from .models import User
+
 def get_db():
     db = database.SessionLocal()
     try:
@@ -20,16 +20,30 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/register")
-def register(email: str, password: str, db: Session = Depends(get_db)):
-    if db.query(User).filter(User.email == email).first():
+@router.post("/register", response_model=schemas.UserOut)
+def register(u: schemas.UserCreate, db: Session = Depends(get_db)):
+
+    # Kiểm tra email tồn tại
+    existing = db.query(models.User).filter(models.User.email == u.email).first()
+    if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
-    hashed = utils.hash_password(password)
-    user = User(email=email, hashed_password=hashed)
+
+    # Hash mật khẩu
+    hashed = utils.hash_password(u.password)
+
+    # Tạo user
+    user = models.User(
+        email=u.email,
+        hashed_password=hashed,
+        role="viewer",
+        notify=True
+    )
+
     db.add(user)
     db.commit()
     db.refresh(user)
-    return {"email": user.email, "message": "Registered successfully"}
+
+    return user
 # dangki
 @router.post("/register/send-code")
 def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)):
