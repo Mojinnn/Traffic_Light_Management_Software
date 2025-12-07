@@ -60,20 +60,6 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
     db.add(rec)
     db.commit()
 
-    # Tạm comment gửi mail để đăng nhập ok
-    
-    try:
-        notify.send_mail_sync(
-            [data.email],
-            "Verify your Traffic Manager account",
-            f"Your verification code is: {code}"
-        )
-    except Exception as e:
-        print("Skip sending email:", e)
-    
-    return {"message": "Verification code sent"}  # trả về luôn
-
-
     # Gửi email
 
     notify.send_mail_sync(

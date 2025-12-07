@@ -1,16 +1,20 @@
 # app/ai_ingest.py
 from fastapi import APIRouter, Depends, HTTPException, Header, BackgroundTasks
 from sqlalchemy.orm import Session
+from datetime import datetime
 from . import schemas, models, database, notify, mqtt_client, auth
 import os
-import json
+import requests
 
 from .auth import role_required
-router = APIRouter(prefix="/api") 
+router = APIRouter(prefix="/api")
 
-# API key to protect AI uploader
-# AI_KEY = os.environ.get("AI_INGEST_API_KEY", "dev_key_123")
-ALERT_THRESHOLD = int(os.environ.get("ALERT_THRESHOLD", 15))  # threshold count to trigger email
+# ==========================
+# Cấu hình
+# ==========================
+ALERT_THRESHOLD = int(os.environ.get("ALERT_THRESHOLD", 15))  # Ngưỡng cảnh báo
+DEFAULT_LIGHT = {"red": 25, "yellow": 3, "green": 22}         # Thời gian đèn mặc định
+#BACKEND_LIGHT_URL = "http://127.0.0.1:8000/api/lights"        # API để chỉnh đèn mặc định
 
 def get_db():
     db = database.SessionLocal()
@@ -18,7 +22,108 @@ def get_db():
         yield db
     finally:
         db.close()
+# ==========================
+# POST – Ingest traffic count
+# ==========================
+@router.post("/traffic-count", status_code=201)
+def ingest_traffic(
+    data: schemas.TrafficCountIn,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(role_required(["admin"])),
+    background: BackgroundTasks = None
+):
+    # Lưu vào DB
+    tc = models.TrafficCount(
+        north=data.north,
+        south=data.south,
+        east=data.east,
+        west=data.west
+    )
+    db.add(tc)
+    db.commit()
 
+    # ---------------- CHECK NGƯỠNG ----------------
+    directions = {
+        "north": data.north,
+        "south": data.south,
+        "east": data.east,
+        "west": data.west,
+    }
+
+    exceeded = [d for d, v in directions.items() if v >= ALERT_THRESHOLD]
+
+    # ===== Nếu có hướng vượt ngưỡng → gửi mail =====
+    if exceeded:
+        msg = "Hướng vượt ngưỡng: " + ", ".join(
+            [f"{d} ({directions[d]})" for d in exceeded]
+        )
+
+        recipients = [
+            u.email for u in db.query(models.User)
+            .filter(models.User.notify == True, models.User.role == "police")
+        ]
+
+        if recipients:
+            background.add_task(
+                notify.send_mail_sync,
+                recipients,
+                "[Traffic Alert] High Traffic Detected",
+                msg
+            )
+
+    # ===== Nếu KHÔNG có hướng nào vượt ngưỡng → RESET LIGHT =====
+    else:
+        DEFAULT_LIGHT = {"red": 25, "yellow": 3, "green": 22}
+        lights = db.query(models.LightSetting).all()
+        for light in lights:
+            light.red = DEFAULT_LIGHT["red"]
+            light.yellow = DEFAULT_LIGHT["yellow"]
+            light.green = DEFAULT_LIGHT["green"]
+        db.commit()
+
+    return {"ok": True}
+# ==========================
+# GET latest traffic count
+# ==========================
+@router.get("/traffic-count/latest", response_model=schemas.TrafficCountOut)
+def get_latest(db: Session = Depends(get_db)):
+    row = db.query(models.TrafficCount).order_by(models.TrafficCount.id.desc()).first()
+    if not row:
+        return {
+            "timestamp": datetime.now(),
+            "north": 0, "south": 0, "east": 0, "west": 0
+        }
+    return row
+
+
+# ==========================
+# GET history
+# ==========================
+@router.get("/traffic-count/history", response_model=list[schemas.TrafficCountOut])
+def get_history(limit: int = 100, db: Session = Depends(get_db)):
+    rows = (
+        db.query(models.TrafficCount)
+        .order_by(models.TrafficCount.timestamp.desc())
+        .limit(limit)
+        .all()
+    )
+    return rows[::-1]  # đảo lại từ cũ → mới
+
+
+# ==========================
+# DELETE history
+# ==========================
+@router.delete("/traffic-count", status_code=200)
+def clear_all(
+    db: Session = Depends(get_db),
+    user: models.User = Depends(role_required(["admin"]))
+):
+    deleted = db.query(models.TrafficCount).delete()
+    db.commit()
+    return {"message": f"Deleted {deleted} rows."}
+
+
+"""
 @router.post("/Light Counter", status_code=201)
 def ingest(
     data: schemas.IngestIn,
@@ -99,3 +204,4 @@ def clear_ingest(
     deleted_count = db.query(models.TrafficData).delete()
     db.commit()
     return {"message": f"Deleted {deleted_count} rows."}
+"""

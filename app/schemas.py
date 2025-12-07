@@ -27,19 +27,33 @@ class TokenResp(BaseModel):
     token_type: str = "bearer"
 
 
-class IngestIn(BaseModel):
-    camera_id: str
-    count: int
-    meta: Optional[dict] = None
-
-class TrafficOut(BaseModel):
-    id: int
-    camera_id: str
-    count: int
-    meta: Optional[dict]
+#class IngestIn(BaseModel):
+#    camera_id: str
+#    count: int
+#    meta: Optional[dict] = None
+class TrafficCountIn(BaseModel):
+    north: int
+    south: int
+    east: int
+    west: int
+#class TrafficOut(BaseModel):
+#    id: int
+#    camera_id: str
+#    count: int
+#    meta: Optional[dict]
+#    timestamp: datetime
+#    class Config:
+#        orm_mode = True
+class TrafficCountOut(BaseModel):
     timestamp: datetime
+    north: int
+    south: int
+    east: int
+    west: int
+
     class Config:
         orm_mode = True
+
 
 class LightSettingIn(BaseModel):
     intersection: str

@@ -17,13 +17,23 @@ class TokenBlocklist(Base):
     jti = Column(String, unique=True, index=True)
     revoked_at = Column(DateTime(timezone=True), server_default=func.now())
 
-class TrafficData(Base):
-    __tablename__ = "traffic_data"
+#class TrafficData(Base):
+#    __tablename__ = "traffic_data"
+#    id = Column(Integer, primary_key=True, index=True)
+#    camera_id = Column(String, index=True)
+#    count = Column(Integer)
+#    meta = Column(Text, nullable=True)  # optional JSON metadata
+#    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+class TrafficCount(Base):
+    __tablename__ = "traffic_count"
+
     id = Column(Integer, primary_key=True, index=True)
-    camera_id = Column(String, index=True)
-    count = Column(Integer)
-    meta = Column(Text, nullable=True)  # optional JSON metadata
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+    north = Column(Integer, default=0)
+    south = Column(Integer, default=0)
+    east = Column(Integer, default=0)
+    west = Column(Integer, default=0)
 
 class LightSetting(Base):
     __tablename__ = "light_settings"

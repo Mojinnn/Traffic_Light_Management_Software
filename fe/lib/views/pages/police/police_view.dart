@@ -1,72 +1,17 @@
-// import 'package:first_flutter/views/widgets/container_widget.dart';
-// import 'package:first_flutter/views/widgets/hero_widget.dart';
-// import 'package:flutter/material.dart';
-
-// class ViewerHome extends StatelessWidget {
-//   const ViewerHome({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final Map<String, List<Map<String, String>>> featureMap = {
-//       "Viewer Functions": [
-//         {
-//           "title": "View Traffic Density",
-//           "desc": "See real-time traffic density",
-//         },
-//       ],
-//     };
-
-//     return SingleChildScrollView(
-//       child: Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             HeroWidget(title: 'Home', nextPage: null),
-
-//             ...featureMap.entries.map((section) {
-//               return Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   const SizedBox(height: 20),
-//                   Text(
-//                     section.key,
-//                     style: const TextStyle(
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 10),
-
-//                   ...section.value.map((feature) {
-//                     return ContainerWidget(
-//                       title: feature["title"]!,
-//                       description: feature["desc"]!,
-//                     );
-//                   }),
-//                 ],
-//               );
-//             }),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
 
-class ViewerHome extends StatefulWidget {
-  const ViewerHome({super.key});
+class PoliceView extends StatefulWidget {
+  const PoliceView({super.key});
 
   @override
-  State<ViewerHome> createState() => _ViewerHomeState();
+  State<PoliceView> createState() => _PoliceViewState();
 }
 
-class _ViewerHomeState extends State<ViewerHome> {
+class _PoliceViewState extends State<PoliceView> {
   // Video stream
   String? currentImageUrl;
   bool isStreaming = false;
@@ -79,13 +24,12 @@ class _ViewerHomeState extends State<ViewerHome> {
 
   // API endpoints
   final String videoStreamUrl = 'YOUR_BACKEND_URL/stream/frame';
-  final String vehicleCountUrl = "http://127.0.0.1:8000/api/traffic-count/latest";
+  final String vehicleCountUrl = 'YOUR_BACKEND_URL/vehicle/count';
 
   @override
   void initState() {
     super.initState();
     startStreaming();
-    _fetchLatestData();
     startChartUpdate();
   }
 
@@ -125,39 +69,60 @@ class _ViewerHomeState extends State<ViewerHome> {
     });
   }
 
-   // --- Fetch dữ liệu từ backend ---
-  Future<void> _fetchLatestData() async {
-    try {
-      final response = await http.get(Uri.parse(vehicleCountUrl));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final timestamp = DateTime.now();
-        setState(() {
-          dataPoints.add(
-            VehicleDataPoint(
-              time: timestamp,
-              north: data['north'] ?? 0,
-              south: data['south'] ?? 0,
-              east: data['east'] ?? 0,
-              west: data['west'] ?? 0,
-            ),
-          );
-          if (dataPoints.length > maxDataPoints) dataPoints.removeAt(0);
-        });
-      } else {
-        print('Failed to fetch vehicle count: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching vehicle count: $e');
-    }
-  }
-
-  // --- Timer cập nhật chart ---
+  // Bắt đầu cập nhật biểu đồ
   void startChartUpdate() {
     chartUpdateTimer = Timer.periodic(Duration(seconds: 30), (timer) async {
-      await _fetchLatestData();
+      try {
+        final response = await http.get(Uri.parse(vehicleCountUrl));
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final timestamp = DateTime.now();
+
+          setState(() {
+            dataPoints.add(
+              VehicleDataPoint(
+                time: timestamp,
+                north: data['north'] ?? 0,
+                south: data['south'] ?? 0,
+                east: data['east'] ?? 0,
+                west: data['west'] ?? 0,
+              ),
+            );
+
+            if (dataPoints.length > maxDataPoints) {
+              dataPoints.removeAt(0);
+            }
+          });
+        }
+      } catch (e) {
+        print('Error fetching vehicle count: $e');
+        // Dữ liệu giả để test (xóa khi có backend)
+        _addMockData();
+      }
     });
   }
+
+  // Thêm dữ liệu giả để test
+  void _addMockData() {
+    final random = DateTime.now().second;
+    setState(() {
+      dataPoints.add(
+        VehicleDataPoint(
+          time: DateTime.now(),
+          north: 5 + (random % 10),
+          south: 8 + (random % 8),
+          east: 6 + (random % 12),
+          west: 4 + (random % 9),
+        ),
+      );
+
+      if (dataPoints.length > maxDataPoints) {
+        dataPoints.removeAt(0);
+      }
+    });
+  }
+
   // Dừng cập nhật biểu đồ
   void stopChartUpdate() {
     chartUpdateTimer?.cancel();

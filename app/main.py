@@ -7,11 +7,12 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from fastapi.middleware.cors import CORSMiddleware
 import io, requests
+from . import database
 
 from .database import engine, Base, SessionLocal
 from . import models, schemas, auth, mqtt_client, utils, ai_ingest
 from .auth import role_required
-
+Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Traffic Manager (backend)")
 
 # CORS
@@ -76,6 +77,117 @@ def get_db():
 app.include_router(auth.router)
 app.include_router(ai_ingest.router)
 
+# ---------- Default lights ----------
+def init_default_lights():
+    db = database.SessionLocal()
+    defaults = ["north", "south", "east", "west"]
+
+    for d in defaults:
+        existing = db.query(models.LightSetting).filter(
+            models.LightSetting.intersection == d
+        ).first()
+
+        if not existing:
+            row = models.LightSetting(
+                intersection=d,
+                red=25,
+                yellow=3,
+                green=22
+            )
+            db.add(row)
+
+    db.commit()
+    db.close()
+
+# Tạo bản ghi mặc định khi khởi động
+init_default_lights()
+
+ALERT_THRESHOLD = int(os.environ.get("ALERT_THRESHOLD", 15))  # Ngưỡng cảnh báo
+# ---------- LIGHT CONTROL ----------
+DEFAULT_LIGHT = {"red": 25, "yellow": 3, "green": 22}
+
+@app.get("/api/lights", response_model=list[schemas.LightSettingOut])
+def list_lights(db: Session = Depends(get_db), user: models.User = Depends(auth.get_current_user)):
+
+    rows = db.query(models.LightSetting).all()
+
+    
+    # Nếu chưa có dữ liệu → tạo mặc định
+    if not rows:
+        intersections = ["north", "south", "east", "west"]
+        created = []
+        for inter in intersections:
+            row = models.LightSetting(
+                intersection=inter,
+                red=DEFAULT_LIGHT["red"],
+                yellow=DEFAULT_LIGHT["yellow"],
+                green=DEFAULT_LIGHT["green"]
+            )
+            db.add(row)
+            created.append(row)
+        db.commit()
+        return created
+
+    # ----- KIỂM TRA TRAFFIC COUNT MỚI NHẤT -----
+    latest_traffic = db.query(models.TrafficCount).order_by(models.TrafficCount.id.desc()).first()
+    if latest_traffic:
+        directions = {
+            "north": latest_traffic.north,
+            "south": latest_traffic.south,
+            "east": latest_traffic.east,
+            "west": latest_traffic.west
+        }
+        exceeded = [d for d, v in directions.items() if v >= ALERT_THRESHOLD]
+
+        # Nếu không có hướng nào vượt ngưỡng → reset tất cả đèn về mặc định
+        if not exceeded:
+            for row in rows:
+                row.red = DEFAULT_LIGHT["red"]
+                row.yellow = DEFAULT_LIGHT["yellow"]
+                row.green = DEFAULT_LIGHT["green"]
+            db.commit()
+
+    return rows
+
+
+
+@app.post("/api/lights", response_model=schemas.LightSettingOut)
+def set_light(
+    payload: schemas.LightSettingIn, 
+    db: Session = Depends(get_db),
+    user: models.User = Depends(role_required(["admin", "police"]))
+):
+    row = db.query(models.LightSetting).filter(
+        models.LightSetting.intersection == payload.intersection
+    ).first()
+
+    if row:
+        row.red = payload.red
+        row.yellow = payload.yellow
+        row.green = payload.green
+    else:
+        row = models.LightSetting(
+            intersection=payload.intersection,
+            red=payload.red,
+            yellow=payload.yellow,
+            green=payload.green
+        )
+        db.add(row)
+
+    db.commit()
+    db.refresh(row)
+
+    # Publish MQTT → gửi xuống ESP
+    mqtt_client.publish_light(
+        row.intersection,
+        row.red,
+        row.yellow,
+        row.green
+    )
+    return row
+
+
+"""
 # ---------- Light control ----------
 @app.get("/api/lights", response_model=list[schemas.LightSettingOut])
 def list_lights(db: Session = Depends(get_db), user: models.User = Depends(auth.get_current_user)):
@@ -97,7 +209,7 @@ def set_light(payload: schemas.LightSettingIn, db: Session = Depends(get_db),
     db.refresh(row)
     mqtt_client.publish_light(row.intersection, row.red, row.yellow, row.green)
     return row
-
+"""
 # ---------- Alert logs ----------
 @app.get("/api/alerts", response_model=list[schemas.AlertLogOut])
 def alerts(limit: int = 50, db: Session = Depends(get_db),
@@ -124,6 +236,29 @@ def me(user: models.User = Depends(auth.get_current_user)):
 @app.get("/api/users", response_model=list[schemas.UserOut])
 def list_users(db: Session = Depends(get_db), user: models.User = Depends(role_required(["admin"]))):
     return db.query(models.User).all()
+@app.delete("/api/users/{user_id}", status_code=200)
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(role_required(["admin"]))
+):
+    # Không cho admin tự xóa chính mình
+    if admin.id == user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Admin cannot delete their own account."
+        )
+
+    # Tìm user theo ID
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    db.delete(user)
+    db.commit()
+
+    return {"message": f"User {user.email} deleted successfully."}
 
 
 """
