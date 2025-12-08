@@ -8,6 +8,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    firstname = Column(String)      # <-- thêm
+    lastname = Column(String)       # <-- thêm
     role = Column(String, default="viewer")  # "admin" or "viewer"
     notify = Column(Boolean, default=True)   # whether this user wants email alerts
    
@@ -56,10 +58,15 @@ class AlertLog(Base):
 
 class EmailVerify(Base):
     __tablename__ = "email_verify"
-    id = Column(Integer, primary_key=True, index=True)
+
+    id = Column(Integer, primary_key=True)
     email = Column(String, index=True)
+    firstname = Column(String)
+    lastname = Column(String)
+    password = Column(String)
     code = Column(String)
     expires_at = Column(DateTime)
+
 
 class ResetToken(Base):
     __tablename__ = "reset_tokens"

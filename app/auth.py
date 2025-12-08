@@ -46,22 +46,36 @@ def register(u: schemas.UserCreate, db: Session = Depends(get_db)):
     return user
 # dangki
 @router.post("/register/send-code")
-def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)):
-    # Email tồn tại rồi → không cho tạo
+def send_verify_email(data: schemas.RegisterSendCodeIn, db: Session = Depends(get_db)):
+
+    # email tồn tại → không cho tạo user mới
     if db.query(models.User).filter(models.User.email == data.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
 
+    # check password match
+    if data.password != data.retype_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+
     import random
     code = f"{random.randint(100000,999999)}"
+    exp = datetime.utcnow() + timedelta(minutes=10)
 
-    expires = datetime.utcnow() + timedelta(minutes=10)
+    # Xóa record cũ nếu có
+    db.query(models.EmailVerify).filter(models.EmailVerify.email == data.email).delete()
 
-    rec = models.EmailVerify(email=data.email, code=code, expires_at=expires)
+    rec = models.EmailVerify(
+        email=data.email,
+        firstname=data.firstname,
+        lastname=data.lastname,
+        password=utils.hash_password(data.password),
+        code=code,
+        expires_at=exp
+    )
+
     db.add(rec)
     db.commit()
 
-    # Gửi email
-
+    # gửi email
     notify.send_mail_sync(
         [data.email],
         "Verify your Traffic Manager account",
@@ -69,7 +83,6 @@ def send_verify_email(data: schemas.EmailVerifyIn, db: Session = Depends(get_db)
     )
 
     return {"message": "Verification code sent"}
-
 
 @router.post("/register/confirm", response_model=schemas.UserOut)
 def confirm_register(data: schemas.RegisterConfirmIn, db: Session = Depends(get_db)):
@@ -80,22 +93,31 @@ def confirm_register(data: schemas.RegisterConfirmIn, db: Session = Depends(get_
     ).first()
 
     if not rec:
-        raise HTTPException(status_code=400, detail="Invalid code")
+        raise HTTPException(status_code=400, detail="Invalid verification code")
 
     if rec.expires_at < datetime.utcnow():
         raise HTTPException(status_code=400, detail="Verification code expired")
 
-    hashed = utils.hash_password(data.password)
-    user = models.User(email=data.email, hashed_password=hashed, role="viewer", notify=True)
+    # tạo user
+    user = models.User(
+        email=rec.email,
+        hashed_password=rec.password,
+        firstname=rec.firstname,
+        lastname=rec.lastname,
+        role="viewer",
+        notify=True
+    )
 
     db.add(user)
     db.commit()
     db.refresh(user)
 
+    # xóa record verify
     db.delete(rec)
     db.commit()
 
     return user
+
 
 # register - default as viewer
 #@router.post("/register", response_model=schemas.UserOut)
@@ -198,12 +220,16 @@ def change_password(
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    # Kiểm tra mật khẩu cũ
     if not utils.verify_password(data.old_password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Old password incorrect")
 
+    # Kiểm tra new_password == retype_password
+    if data.new_password != data.retype_password:
+        raise HTTPException(status_code=400, detail="Retype password does not match")
+
+    # Cập nhật mật khẩu mới
     user.hashed_password = utils.hash_password(data.new_password)
     db.commit()
 
     return {"message": "Password changed successfully"}
-
-

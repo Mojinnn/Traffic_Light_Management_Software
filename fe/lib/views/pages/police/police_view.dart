@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
-
+import 'package:first_flutter/data/auth_service.dart';
 class PoliceView extends StatefulWidget {
   const PoliceView({super.key});
 
@@ -24,7 +24,7 @@ class _PoliceViewState extends State<PoliceView> {
 
   // API endpoints
   final String videoStreamUrl = 'YOUR_BACKEND_URL/stream/frame';
-  final String vehicleCountUrl = 'YOUR_BACKEND_URL/vehicle/count';
+  final String vehicleCountUrl = "${AuthService.baseUrl}/api/traffic-count/latest";
 
   @override
   void initState() {
@@ -68,61 +68,39 @@ class _PoliceViewState extends State<PoliceView> {
       isStreaming = false;
     });
   }
+// --- Fetch dữ liệu từ backend ---
+  Future<void> _fetchLatestData() async {
+    try {
+      final response = await http.get(Uri.parse(vehicleCountUrl));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final timestamp = DateTime.now();
+        setState(() {
+          dataPoints.add(
+            VehicleDataPoint(
+              time: timestamp,
+              north: data['north'] ?? 0,
+              south: data['south'] ?? 0,
+              east: data['east'] ?? 0,
+              west: data['west'] ?? 0,
+            ),
+          );
+          if (dataPoints.length > maxDataPoints) dataPoints.removeAt(0);
+        });
+      } else {
+        print('Failed to fetch vehicle count: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching vehicle count: $e');
+    }
+  }
 
-  // Bắt đầu cập nhật biểu đồ
+  // --- Timer cập nhật chart ---
   void startChartUpdate() {
     chartUpdateTimer = Timer.periodic(Duration(seconds: 30), (timer) async {
-      try {
-        final response = await http.get(Uri.parse(vehicleCountUrl));
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          final timestamp = DateTime.now();
-
-          setState(() {
-            dataPoints.add(
-              VehicleDataPoint(
-                time: timestamp,
-                north: data['north'] ?? 0,
-                south: data['south'] ?? 0,
-                east: data['east'] ?? 0,
-                west: data['west'] ?? 0,
-              ),
-            );
-
-            if (dataPoints.length > maxDataPoints) {
-              dataPoints.removeAt(0);
-            }
-          });
-        }
-      } catch (e) {
-        print('Error fetching vehicle count: $e');
-        // Dữ liệu giả để test (xóa khi có backend)
-        _addMockData();
-      }
+      await _fetchLatestData();
     });
   }
-
-  // Thêm dữ liệu giả để test
-  void _addMockData() {
-    final random = DateTime.now().second;
-    setState(() {
-      dataPoints.add(
-        VehicleDataPoint(
-          time: DateTime.now(),
-          north: 5 + (random % 10),
-          south: 8 + (random % 8),
-          east: 6 + (random % 12),
-          west: 4 + (random % 9),
-        ),
-      );
-
-      if (dataPoints.length > maxDataPoints) {
-        dataPoints.removeAt(0);
-      }
-    });
-  }
-
   // Dừng cập nhật biểu đồ
   void stopChartUpdate() {
     chartUpdateTimer?.cancel();

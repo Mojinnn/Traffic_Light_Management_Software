@@ -2,6 +2,8 @@
 // import 'package:first_flutter/models/user_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../services/token_service.dart';
+
 
 class UserInfo {
   final String email;
@@ -17,7 +19,7 @@ class UserInfo {
 
 class AuthService {
   static const String baseUrl = "http://127.0.0.1:8000";
-
+   static UserInfo? currentUser;  // 🔥 giữ user đăng nhập
 
 
   // 1️⃣ Send verification code
@@ -80,7 +82,8 @@ class AuthService {
 
       final data = jsonDecode(response.body);
       final token = data["access_token"];
-
+        // 🔥 LƯU TOKEN NGAY TẠI ĐÂY
+      await TokenService.saveToken(token);
       // 2️⃣ GET /users/me -> lấy email + role
       final profileRes = await http.get(
         Uri.parse("$baseUrl/api/users/me"),
@@ -91,15 +94,54 @@ class AuthService {
 
       final profile = jsonDecode(profileRes.body);
 
-      return UserInfo(
+      currentUser = UserInfo(
         email: profile["email"],
         role: profile["role"],
         token: token,
       );
+      
+      return currentUser;
+
     } catch (e) {
       print("Login error: $e");
       return null;
     }
   }
+// change password//
+
+  static Future<void> changePassword({
+  required String oldPassword,
+  required String newPassword,
+  required String retypePassword,
+}) async {
+
+  final token = await TokenService.getToken(); // <-- Lấy JWT đã đăng nhập
+  
+  if (token == null) throw "Bạn chưa đăng nhập";
+  print("TOKEN hiện tại: $token"); // DEBUG
+  final url = Uri.parse("$baseUrl/auth/password/change"); // <-- FIX URL
+
+  final response = await http.post(
+    url,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
+    body: jsonEncode({
+      "old_password": oldPassword,
+      "new_password": newPassword,
+      "retype_password": retypePassword,
+    }),
+  );
+
+  if (response.statusCode != 200) {
+    try {
+      throw jsonDecode(response.body)["detail"];
+    } catch (e) {
+      throw "Đổi mật khẩu thất bại";
+    }
+  }
+}
+
 }
 

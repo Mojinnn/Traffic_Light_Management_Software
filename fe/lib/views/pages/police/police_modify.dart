@@ -23,25 +23,25 @@ class _PoliceModifyState extends State<PoliceModify> {
   List<TrafficLight> trafficLights = [
     TrafficLight(
       id: 1,
-      name: 'Đèn Bắc',
+      name: 'North Light',
       direction: 'North',
       state: TrafficLightState.red,
     ),
     TrafficLight(
       id: 2,
-      name: 'Đèn Nam',
+      name: 'South Light',
       direction: 'South',
       state: TrafficLightState.red,
     ),
     TrafficLight(
       id: 3,
-      name: 'Đèn Đông',
+      name: 'East Light',
       direction: 'East',
       state: TrafficLightState.green,
     ),
     TrafficLight(
       id: 4,
-      name: 'Đèn Tây',
+      name: 'West Light',
       direction: 'West',
       state: TrafficLightState.green,
     ),
@@ -251,7 +251,7 @@ class _PoliceModifyState extends State<PoliceModify> {
                         child: ElevatedButton.icon(
                           onPressed: setAutoMode,
                           icon: Icon(Icons.autorenew, size: 18),
-                          label: Text('Tự động'),
+                          label: Text('Auto'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isAutoMode
                                 ? Colors.green
@@ -266,7 +266,7 @@ class _PoliceModifyState extends State<PoliceModify> {
                         child: ElevatedButton.icon(
                           onPressed: setManualMode,
                           icon: Icon(Icons.pan_tool, size: 18),
-                          label: Text('Thủ công'),
+                          label: Text('Manual'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: !isAutoMode
                                 ? Colors.blue
@@ -281,7 +281,7 @@ class _PoliceModifyState extends State<PoliceModify> {
                         child: ElevatedButton.icon(
                           onPressed: emergencyStop,
                           icon: Icon(Icons.emergency, size: 18),
-                          label: Text('Khẩn cấp'),
+                          label: Text('Emergency'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
@@ -313,7 +313,7 @@ class _PoliceModifyState extends State<PoliceModify> {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'Chế độ: ${isAutoMode ? "TỰ ĐỘNG" : "THỦ CÔNG"}',
+                          'Mode: ${isAutoMode ? "AUTO" : "MANUAL"}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -336,7 +336,7 @@ class _PoliceModifyState extends State<PoliceModify> {
                 children: [
                   // Hàng 1: Đèn Bắc
                   SizedBox(
-                    height: 180,
+                    // height: 180,
                     child: Center(
                       child: SizedBox(
                         width: 150,
@@ -354,9 +354,10 @@ class _PoliceModifyState extends State<PoliceModify> {
 
                   // Hàng 2: Đèn Tây - Ngã tư - Đèn Đông
                   SizedBox(
-                    height: 180,
+                    // height: 180,
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: TrafficLightWidget(
@@ -400,7 +401,7 @@ class _PoliceModifyState extends State<PoliceModify> {
 
                   // Hàng 3: Đèn Nam
                   SizedBox(
-                    height: 180,
+                    // height: 180,
                     child: Center(
                       child: SizedBox(
                         width: 150,

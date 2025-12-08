@@ -57,6 +57,14 @@ def ingest_traffic(
         msg = "Hướng vượt ngưỡng: " + ", ".join(
             [f"{d} ({directions[d]})" for d in exceeded]
         )
+        for d in exceeded:
+            alert = models.AlertLog(
+               camera_id=d,
+               message=f"Hướng {d} vượt ngưỡng {ALERT_THRESHOLD}",
+               value=directions[d]
+            )
+            db.add(alert)
+        db.commit()
 
         recipients = [
             u.email for u in db.query(models.User)

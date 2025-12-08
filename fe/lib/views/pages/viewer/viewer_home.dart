@@ -1,63 +1,14 @@
-// import 'package:first_flutter/views/widgets/container_widget.dart';
-// import 'package:first_flutter/views/widgets/hero_widget.dart';
-// import 'package:flutter/material.dart';
 
-// class ViewerHome extends StatelessWidget {
-//   const ViewerHome({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final Map<String, List<Map<String, String>>> featureMap = {
-//       "Viewer Functions": [
-//         {
-//           "title": "View Traffic Density",
-//           "desc": "See real-time traffic density",
-//         },
-//       ],
-//     };
-
-//     return SingleChildScrollView(
-//       child: Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             HeroWidget(title: 'Home', nextPage: null),
-
-//             ...featureMap.entries.map((section) {
-//               return Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   const SizedBox(height: 20),
-//                   Text(
-//                     section.key,
-//                     style: const TextStyle(
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 10),
-
-//                   ...section.value.map((feature) {
-//                     return ContainerWidget(
-//                       title: feature["title"]!,
-//                       description: feature["desc"]!,
-//                     );
-//                   }),
-//                 ],
-//               );
-//             }),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+// ============================================
+// 2. VIEWER_HOME.DART - Với Feature Gate
+// ============================================
 import 'dart:async';
 import 'dart:convert';
+import 'package:first_flutter/services/future_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
+import 'package:first_flutter/data/auth_service.dart';
 
 class ViewerHome extends StatefulWidget {
   const ViewerHome({super.key});
@@ -67,6 +18,11 @@ class ViewerHome extends StatefulWidget {
 }
 
 class _ViewerHomeState extends State<ViewerHome> {
+  // Feature Service
+  final FeatureService _featureService = FeatureService();
+  bool _isFeatureEnabled = true;
+  bool _isCheckingFeature = true;
+
   // Video stream
   String? currentImageUrl;
   bool isStreaming = false;
@@ -74,19 +30,22 @@ class _ViewerHomeState extends State<ViewerHome> {
 
   // Chart data - 4 hướng
   List<VehicleDataPoint> dataPoints = [];
-  int maxDataPoints = 20; // Hiển thị tối đa 20 điểm
+  int maxDataPoints = 20;
   Timer? chartUpdateTimer;
 
   // API endpoints
   final String videoStreamUrl = 'YOUR_BACKEND_URL/stream/frame';
-  final String vehicleCountUrl = "http://127.0.0.1:8000/api/traffic-count/latest";
+  final String vehicleCountUrl = "${AuthService.baseUrl}/api/traffic-count/latest";
 
   @override
   void initState() {
     super.initState();
-    startStreaming();
-    _fetchLatestData();
-    startChartUpdate();
+    _checkFeatureAccess();
+
+    // Lắng nghe thay đổi từ Admin
+    _featureService.startListening(() {
+      _checkFeatureAccess();
+    });
   }
 
   @override
@@ -96,8 +55,30 @@ class _ViewerHomeState extends State<ViewerHome> {
     super.dispose();
   }
 
+  // Kiểm tra quyền truy cập tính năng
+  Future<void> _checkFeatureAccess() async {
+    final isEnabled = await _featureService.isFeatureEnabled(
+      'viewer_view_traffic',
+    );
+
+    setState(() {
+      _isFeatureEnabled = isEnabled;
+      _isCheckingFeature = false;
+    });
+
+    if (isEnabled) {
+      startStreaming();
+      startChartUpdate();
+    } else {
+      stopStreaming();
+      stopChartUpdate();
+    }
+  }
+
   // Bắt đầu stream video
   void startStreaming() {
+    if (!_isFeatureEnabled) return;
+
     setState(() {
       isStreaming = true;
     });
@@ -117,15 +98,13 @@ class _ViewerHomeState extends State<ViewerHome> {
     });
   }
 
-  // Dừng stream video
   void stopStreaming() {
     streamTimer?.cancel();
     setState(() {
       isStreaming = false;
     });
   }
-
-   // --- Fetch dữ liệu từ backend ---
+// --- Fetch dữ liệu từ backend ---
   Future<void> _fetchLatestData() async {
     try {
       final response = await http.get(Uri.parse(vehicleCountUrl));
@@ -151,20 +130,109 @@ class _ViewerHomeState extends State<ViewerHome> {
       print('Error fetching vehicle count: $e');
     }
   }
-
-  // --- Timer cập nhật chart ---
+  //-----------------------------//
+  // --- Timer cập nhật chart ---//
+  //-----------------------------//
   void startChartUpdate() {
     chartUpdateTimer = Timer.periodic(Duration(seconds: 30), (timer) async {
       await _fetchLatestData();
     });
   }
-  // Dừng cập nhật biểu đồ
+
   void stopChartUpdate() {
     chartUpdateTimer?.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Đang kiểm tra quyền truy cập
+    if (_isCheckingFeature) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Vehicle Monitoring'),
+          backgroundColor: Colors.blue.shade700,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 20),
+              Text('Checking access...'),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Feature bị tắt
+    if (!_isFeatureEnabled) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Vehicle Monitoring'),
+          backgroundColor: Colors.orange.shade700,
+        ),
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.lock, size: 100, color: Colors.orange.shade300),
+                SizedBox(height: 30),
+                Text(
+                  'Feature Disabled',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                SizedBox(height: 15),
+                Text(
+                  'The traffic viewing feature has been disabled by the administrator.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.orange.shade200),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.orange.shade700),
+                      SizedBox(width: 10),
+                      Text(
+                        'Contact your administrator for access',
+                        style: TextStyle(color: Colors.orange.shade700),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    _checkFeatureAccess();
+                  },
+                  icon: Icon(Icons.refresh),
+                  label: Text('Check Again'),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Feature được bật - hiển thị nội dung bình thường
     return Scaffold(
       appBar: AppBar(
         title: Text('Vehicle Monitoring'),
@@ -255,7 +323,6 @@ class _ViewerHomeState extends State<ViewerHome> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header với legend
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -280,8 +347,6 @@ class _ViewerHomeState extends State<ViewerHome> {
                     ],
                   ),
                   SizedBox(height: 10),
-
-                  // Current counts
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -308,8 +373,6 @@ class _ViewerHomeState extends State<ViewerHome> {
                     ],
                   ),
                   SizedBox(height: 15),
-
-                  // Chart
                   Expanded(
                     child: dataPoints.isEmpty
                         ? Center(
@@ -325,18 +388,14 @@ class _ViewerHomeState extends State<ViewerHome> {
                                 drawVerticalLine: true,
                                 horizontalInterval: 2,
                                 verticalInterval: 1,
-                                getDrawingHorizontalLine: (value) {
-                                  return FlLine(
-                                    color: Colors.grey.shade300,
-                                    strokeWidth: 1,
-                                  );
-                                },
-                                getDrawingVerticalLine: (value) {
-                                  return FlLine(
-                                    color: Colors.grey.shade300,
-                                    strokeWidth: 1,
-                                  );
-                                },
+                                getDrawingHorizontalLine: (value) => FlLine(
+                                  color: Colors.grey.shade300,
+                                  strokeWidth: 1,
+                                ),
+                                getDrawingVerticalLine: (value) => FlLine(
+                                  color: Colors.grey.shade300,
+                                  strokeWidth: 1,
+                                ),
                               ),
                               titlesData: FlTitlesData(
                                 show: true,
@@ -405,44 +464,56 @@ class _ViewerHomeState extends State<ViewerHome> {
                               minY: 0,
                               maxY: _getMaxY(),
                               lineBarsData: [
-                                // Đường Bắc (Red)
                                 _buildLineChartBarData(
-                                  dataPoints.asMap().entries.map((e) {
-                                    return FlSpot(
-                                      e.key.toDouble(),
-                                      e.value.north.toDouble(),
-                                    );
-                                  }).toList(),
+                                  dataPoints
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) => FlSpot(
+                                          e.key.toDouble(),
+                                          e.value.north.toDouble(),
+                                        ),
+                                      )
+                                      .toList(),
                                   Colors.red,
                                 ),
-                                // Đường Nam (Blue)
                                 _buildLineChartBarData(
-                                  dataPoints.asMap().entries.map((e) {
-                                    return FlSpot(
-                                      e.key.toDouble(),
-                                      e.value.south.toDouble(),
-                                    );
-                                  }).toList(),
+                                  dataPoints
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) => FlSpot(
+                                          e.key.toDouble(),
+                                          e.value.south.toDouble(),
+                                        ),
+                                      )
+                                      .toList(),
                                   Colors.blue,
                                 ),
-                                // Đường Đông (Green)
                                 _buildLineChartBarData(
-                                  dataPoints.asMap().entries.map((e) {
-                                    return FlSpot(
-                                      e.key.toDouble(),
-                                      e.value.east.toDouble(),
-                                    );
-                                  }).toList(),
+                                  dataPoints
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) => FlSpot(
+                                          e.key.toDouble(),
+                                          e.value.east.toDouble(),
+                                        ),
+                                      )
+                                      .toList(),
                                   Colors.green,
                                 ),
-                                // Đường Tây (Orange)
                                 _buildLineChartBarData(
-                                  dataPoints.asMap().entries.map((e) {
-                                    return FlSpot(
-                                      e.key.toDouble(),
-                                      e.value.west.toDouble(),
-                                    );
-                                  }).toList(),
+                                  dataPoints
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) => FlSpot(
+                                          e.key.toDouble(),
+                                          e.value.west.toDouble(),
+                                        ),
+                                      )
+                                      .toList(),
                                   Colors.orange,
                                 ),
                               ],
@@ -458,7 +529,6 @@ class _ViewerHomeState extends State<ViewerHome> {
     );
   }
 
-  // Tạo LineChartBarData cho mỗi hướng
   LineChartBarData _buildLineChartBarData(List<FlSpot> spots, Color color) {
     return LineChartBarData(
       spots: spots,
@@ -481,7 +551,6 @@ class _ViewerHomeState extends State<ViewerHome> {
     );
   }
 
-  // Widget legend
   Widget _buildLegend(String label, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -500,7 +569,6 @@ class _ViewerHomeState extends State<ViewerHome> {
     );
   }
 
-  // Widget hiển thị số lượng xe hiện tại
   Widget _buildCountCard(String direction, int count, Color color) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -535,7 +603,6 @@ class _ViewerHomeState extends State<ViewerHome> {
 
   double _getMaxY() {
     if (dataPoints.isEmpty) return 20;
-
     int maxCount = 0;
     for (var point in dataPoints) {
       if (point.north > maxCount) maxCount = point.north;
@@ -543,12 +610,10 @@ class _ViewerHomeState extends State<ViewerHome> {
       if (point.east > maxCount) maxCount = point.east;
       if (point.west > maxCount) maxCount = point.west;
     }
-
     return (maxCount + 5).toDouble();
   }
 }
 
-// Model cho dữ liệu xe theo 4 hướng
 class VehicleDataPoint {
   final DateTime time;
   final int north;

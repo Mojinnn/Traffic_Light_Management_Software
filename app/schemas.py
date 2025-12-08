@@ -73,7 +73,7 @@ class LightSettingOut(BaseModel):
 
 class AlertLogOut(BaseModel):
     id: int
-    camera_id: str
+    camera_id: Optional[str] = None
     message: str
     value: int
     timestamp: datetime
@@ -81,13 +81,12 @@ class AlertLogOut(BaseModel):
         orm_mode = True
 
 #-bo sung
-class EmailVerifyIn(BaseModel):
-    email: EmailStr
+
 
 
 class ForgotPasswordIn(BaseModel):
     email: EmailStr
-
+    
 class ResetPasswordIn(BaseModel):
     token: str
     new_password: str
@@ -95,7 +94,17 @@ class ResetPasswordIn(BaseModel):
 class ChangePasswordIn(BaseModel):
     old_password: str
     new_password: str
+    retype_password: str
+
+
+class RegisterSendCodeIn(BaseModel):
+    email: EmailStr
+    firstname: str
+    lastname: str
+    password: str
+    retype_password: str
+
+
 class RegisterConfirmIn(BaseModel):
     email: EmailStr
     code: str
-    password: str

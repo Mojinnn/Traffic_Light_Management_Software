@@ -1,5 +1,5 @@
-import 'package:first_flutter/views/widgets/hero_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:first_flutter/data/auth_service.dart';// <-- Thêm service gọi API
 
 class ChangePassword extends StatefulWidget {
   @override
@@ -7,128 +7,87 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
-  bool _isObsecure = true;
+  bool _isObscure = true;
   final _formKey = GlobalKey<FormState>();
 
-  late TextEditingController controllerEmail;
-  late TextEditingController controllerFirstName;
-  late TextEditingController controllerLastName;
-  late TextEditingController controllerPassword;
+  late TextEditingController controllerOldPassword;
+  late TextEditingController controllerNewPassword;
   late TextEditingController controllerRetypePassword;
 
   @override
   void initState() {
     super.initState();
-    controllerEmail = TextEditingController();
-    controllerFirstName = TextEditingController();
-    controllerLastName = TextEditingController();
-    controllerPassword = TextEditingController();
+    controllerOldPassword = TextEditingController();
+    controllerNewPassword = TextEditingController();
     controllerRetypePassword = TextEditingController();
   }
 
   @override
   void dispose() {
-    controllerEmail.dispose();
-    controllerPassword.dispose();
-    controllerFirstName.dispose();
-    controllerLastName.dispose();
+    controllerOldPassword.dispose();
+    controllerNewPassword.dispose();
     controllerRetypePassword.dispose();
     super.dispose();
   }
 
-  // Hàm validate email
-  String? validateEmail(String? value) {
+  // Validate mật khẩu cũ
+  String? validateOldPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập email';
-    }
-    // Kiểm tra format email
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Email không hợp lệ';
+      return "Vui lòng nhập mật khẩu cũ";
     }
     return null;
   }
 
-  // Hàm validate tên
-  String? validateName(String? value, String fieldName) {
+  // Validate mật khẩu mới
+  String? validateNewPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập $fieldName';
-    }
-    if (value.length < 2) {
-      return '$fieldName phải có ít nhất 2 ký tự';
-    }
-    return null;
-  }
-
-  // Hàm validate password
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập mật khẩu';
+      return "Vui lòng nhập mật khẩu mới";
     }
     if (value.length < 6) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự';
+      return "Mật khẩu phải ít nhất 6 ký tự";
     }
     return null;
   }
 
-  // Hàm validate retype password
+  // Validate nhập lại mật khẩu
   String? validateRetypePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập lại mật khẩu';
+      return "Vui lòng nhập lại mật khẩu";
     }
-    if (value != controllerPassword.text) {
-      return 'Mật khẩu không khớp';
+    if (value != controllerNewPassword.text) {
+      return "Mật khẩu không khớp";
     }
     return null;
   }
 
-  // Hàm xử lý đăng ký
-  void onPressedRegister() async {
-    // Validate tất cả các field
+  // API đổi mật khẩu
+  Future<void> onChangePassword() async {
     if (_formKey.currentState!.validate()) {
-      // Hiển thị loading
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()),
+        builder: (_) => Center(child: CircularProgressIndicator()),
       );
 
       try {
-        // TODO: Gọi API để lưu vào database
-        // Ví dụ:
-        // await AuthService.register(
-        //   email: controllerEmail.text,
-        //   firstName: controllerFirstName.text,
-        //   lastName: controllerLastName.text,
-        //   password: controllerPassword.text,
-        // );
-
-        // Giả lập delay API call
-        await Future.delayed(Duration(seconds: 2));
-
-        // Đóng loading dialog
-        Navigator.pop(context);
-
-        // Hiển thị thông báo thành công
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Đăng ký thành công!'),
-            backgroundColor: Colors.green,
-          ),
+        await AuthService.changePassword(
+          oldPassword: controllerOldPassword.text,
+          newPassword: controllerNewPassword.text,
+          retypePassword: controllerRetypePassword.text,
         );
 
-        // Quay về trang trước hoặc chuyển sang trang login
-        Navigator.pop(context);
-      } catch (e) {
-        // Đóng loading dialog
-        Navigator.pop(context);
+        Navigator.pop(context); // đóng loading
 
-        // Hiển thị lỗi
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Đăng ký thất bại: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text("Đổi mật khẩu thành công!"), backgroundColor: Colors.green),
+        );
+
+        Navigator.pop(context); // quay lại trang trước
+      } catch (e) {
+        Navigator.pop(context); // đóng loading
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Lỗi đổi mật khẩu: $e"), backgroundColor: Colors.red),
         );
       }
     }
@@ -137,113 +96,89 @@ class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
     double mediaWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: LayoutBuilder(
-              builder: (context, BoxConstraints constraints) {
-                return FractionallySizedBox(
-                  widthFactor: mediaWidth > 1000 ? 0.5 : 1,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // HeroWidget(title: widget.title),
-                        // SizedBox(height: 20.0),
-
-                        // Password field
-                        TextFormField(
-                          controller: controllerPassword,
-                          obscureText: _isObsecure,
-                          decoration: InputDecoration(
-                            hintText: 'Old Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isObsecure = !_isObsecure;
-                                });
-                              },
-                              icon: Icon(
-                                _isObsecure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                            ),
-                          ),
-                          validator: validatePassword,
+            padding: EdgeInsets.all(20),
+            child: FractionallySizedBox(
+              widthFactor: mediaWidth > 1000 ? 0.5 : 1,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // Old Password
+                    TextFormField(
+                      controller: controllerOldPassword,
+                      obscureText: _isObscure,
+                      decoration: InputDecoration(
+                        hintText: 'Old Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        SizedBox(height: 10.0),
-                        // New password field
-                        TextFormField(
-                          controller: controllerRetypePassword,
-                          obscureText: _isObsecure,
-                          decoration: InputDecoration(
-                            hintText: 'New Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isObsecure = !_isObsecure;
-                                });
-                              },
-                              icon: Icon(
-                                _isObsecure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                            ),
-                          ),
-                          validator: validateRetypePassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() => _isObscure = !_isObscure);
+                          },
                         ),
-                        SizedBox(height: 10.0),
-                        // Retype new password field
-                        TextFormField(
-                          controller: controllerRetypePassword,
-                          obscureText: _isObsecure,
-                          decoration: InputDecoration(
-                            hintText: 'Retype Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isObsecure = !_isObsecure;
-                                });
-                              },
-                              icon: Icon(
-                                _isObsecure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                            ),
-                          ),
-                          validator: validateRetypePassword,
-                        ),
-                        SizedBox(height: 20.0),
-
-                        // Register button
-                        // ElevatedButton(
-                        //   onPressed: onPressedRegister,
-                        //   style: FilledButton.styleFrom(
-                        //     minimumSize: Size(double.infinity, 50.0),
-                        //   ),
-                        // child: Text(widget.title),
-                        // ),
-                      ],
+                      ),
+                      validator: validateOldPassword,
                     ),
-                  ),
-                );
-              },
+                    SizedBox(height: 10),
+
+                    // New Password
+                    TextFormField(
+                      controller: controllerNewPassword,
+                      obscureText: _isObscure,
+                      decoration: InputDecoration(
+                        hintText: 'New Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() => _isObscure = !_isObscure);
+                          },
+                        ),
+                      ),
+                      validator: validateNewPassword,
+                    ),
+                    SizedBox(height: 10),
+
+                    // Retype New Password
+                    TextFormField(
+                      controller: controllerRetypePassword,
+                      obscureText: _isObscure,
+                      decoration: InputDecoration(
+                        hintText: 'Retype Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() => _isObscure = !_isObscure);
+                          },
+                        ),
+                      ),
+                      validator: validateRetypePassword,
+                    ),
+                    SizedBox(height: 20),
+
+                    ElevatedButton(
+                      onPressed: onChangePassword,
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size(double.infinity, 50),
+                      ),
+                      child: Text("Đổi mật khẩu"),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
