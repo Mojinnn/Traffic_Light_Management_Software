@@ -9,13 +9,19 @@ class UserInfo {
   final String email;
   final String role;
   final String token;
+  final String? firstname;
+  final String? lastname;
 
   UserInfo({
     required this.email,
     required this.role,
     required this.token,
+    this.firstname,
+    this.lastname,
   });
 }
+
+
 
 class AuthService {
   static const String baseUrl = "http://127.0.0.1:8000";
@@ -23,14 +29,28 @@ class AuthService {
 
 
   // 1️⃣ Send verification code
-  static Future<bool> sendVerifyCode(String email) async {
+  static Future<bool> sendVerifyCode({
+    required String email,
+    required String firstname,
+    required String lastname,
+    required String password,
+    required String retypePassword,
+  }) async {
     final url = Uri.parse("$baseUrl/auth/register/send-code");
+
     try {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email}),
+        body: jsonEncode({
+          "email": email,
+          "firstname": firstname,
+          "lastname": lastname,
+          "password": password,
+          "retype_password": retypePassword
+        }),
       );
+
       print("SendCode status: ${response.statusCode}, body: ${response.body}");
       return response.statusCode == 200;
     } catch (e) {
@@ -43,9 +63,9 @@ class AuthService {
   static Future<bool> confirmRegister({
     required String email,
     required String code,
-    required String password,
   }) async {
     final url = Uri.parse("$baseUrl/auth/register/confirm");
+
     try {
       final response = await http.post(
         url,
@@ -53,16 +73,17 @@ class AuthService {
         body: jsonEncode({
           "email": email,
           "code": code,
-          "password": password,
         }),
       );
-      print("ConfirmRegister status: ${response.statusCode}, body: ${response.body}");
+
+      print("Confirm status: ${response.statusCode}, body: ${response.body}");
       return response.statusCode == 200;
     } catch (e) {
-      print("ConfirmRegister error: $e");
+      print("Confirm error: $e");
       return false;
     }
   }
+
 //-------login----------
   static Future<UserInfo?> login(String email, String password) async {
     final url = Uri.parse("$baseUrl/auth/token");
@@ -95,10 +116,14 @@ class AuthService {
       final profile = jsonDecode(profileRes.body);
 
       currentUser = UserInfo(
-        email: profile["email"],
-        role: profile["role"],
+        email: profile["email"] ?? "",
+        role: profile["role"] ?? "",
         token: token,
-      );
+        firstname: profile["firstname"] ?? "",
+        lastname: profile["lastname"] ?? "",
+        );
+
+
       
       return currentUser;
 

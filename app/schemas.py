@@ -6,7 +6,8 @@ from datetime import datetime
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-
+    firstname: str = None   # có thể để optional
+    lastname: str = None
 from pydantic import BaseModel
 
 class ChangePassword(BaseModel):
@@ -19,6 +20,8 @@ class UserOut(BaseModel):
     email: EmailStr
     role: str
     notify: bool
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None   # thêm
     class Config:
         orm_mode = True
 

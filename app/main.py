@@ -218,20 +218,39 @@ def alerts(limit: int = 50, db: Session = Depends(get_db),
 
 # ---------- Admin: manage users ----------
 @app.post("/api/users", response_model=schemas.UserOut)
-def create_user(u: schemas.UserCreate, role: str = "police", db: Session = Depends(get_db),
-                user: models.User = Depends(role_required(["admin"]))):
+def create_user(
+    u: schemas.UserCreate, 
+    role: str = "police", 
+    db: Session = Depends(get_db),
+    user: models.User = Depends(role_required(["admin"]))
+):
+    # Kiểm tra email tồn tại
     if db.query(models.User).filter(models.User.email == u.email).first():
         raise HTTPException(status_code=400, detail="Email exists")
+
+    # Hash password
     hashed = utils.hash_password(u.password)
-    new_user = models.User(email=u.email, hashed_password=hashed, role=role, notify=True)
+
+    # Tạo user mới với firstname và lastname
+    new_user = models.User(
+        email=u.email,
+        hashed_password=hashed,
+        role=role,
+        notify=True,
+        firstname=u.firstname,   # <-- thêm
+        lastname=u.lastname      # <-- thêm
+    )
+
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
+
 @app.get("/api/users/me", response_model=schemas.UserOut)
 def me(user: models.User = Depends(auth.get_current_user)):
     return user
+
 
 @app.get("/api/users", response_model=list[schemas.UserOut])
 def list_users(db: Session = Depends(get_db), user: models.User = Depends(role_required(["admin"]))):

@@ -21,6 +21,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController controllerPassword;
   late TextEditingController controllerRetypePassword;
   late TextEditingController controllerCode;
+  late TextEditingController controllerFirstname;
+  late TextEditingController controllerLastname;
 
   bool codeSent = false;
 
@@ -31,6 +33,9 @@ class _RegisterPageState extends State<RegisterPage> {
     controllerPassword = TextEditingController();
     controllerRetypePassword = TextEditingController();
     controllerCode = TextEditingController();
+    controllerFirstname = TextEditingController();
+    controllerLastname = TextEditingController();
+
   }
 
   @override
@@ -39,6 +44,9 @@ class _RegisterPageState extends State<RegisterPage> {
     controllerPassword.dispose();
     controllerRetypePassword.dispose();
     controllerCode.dispose();
+    controllerFirstname.dispose();
+    controllerLastname.dispose();
+
     super.dispose();
   }
 
@@ -69,56 +77,44 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Gửi code xác thực
   void onPressedSendCode() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        final success = await AuthService.sendVerifyCode(controllerEmail.text);
-        if (success) {
-          setState(() {
-            codeSent = true;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Verification code sent to your email")),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Failed to send verification code")),
-          );
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: ${e.toString()}")),
-        );
-      }
+  if (_formKey.currentState!.validate()) {
+    final success = await AuthService.sendVerifyCode(
+      email: controllerEmail.text,
+      firstname: controllerFirstname.text,
+      lastname: controllerLastname.text,
+      password: controllerPassword.text,
+      retypePassword: controllerRetypePassword.text,
+    );
+
+    if (success) {
+      setState(() => codeSent = true);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Verification code sent")));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to send code")));
     }
   }
+}
+
 
   // Confirm đăng ký
   void onPressedRegister() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        final success = await AuthService.confirmRegister(
-          email: controllerEmail.text,
-          code: controllerCode.text,
-          password: controllerPassword.text,
-        );
+  final success = await AuthService.confirmRegister(
+    email: controllerEmail.text,
+    code: controllerCode.text,
+  );
 
-        if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Register success!"), backgroundColor: Colors.green),
-          );
-          Navigator.pop(context); // quay về login
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Register failed!")),
-          );
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: ${e.toString()}")),
-        );
-      }
-    }
+  if (success) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Register success!"), backgroundColor: Colors.green),
+    );
+    Navigator.pop(context);
+  } else {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text("Confirm failed!")));
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +133,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     HeroWidget(title: widget.title),
                     const SizedBox(height: 20.0),
+
+                    // EMAIL
                     TextFormField(
                       controller: controllerEmail,
                       keyboardType: TextInputType.emailAddress,
@@ -150,24 +148,37 @@ class _RegisterPageState extends State<RegisterPage> {
                       enabled: !codeSent,
                     ),
                     const SizedBox(height: 10.0),
+
+                    // FIRSTNAME
                     if (!codeSent)
-                      ElevatedButton(
-                        onPressed: onPressedSendCode,
-                        child: const Text("Send Code"),
-                      ),
-                    if (codeSent) ...[
-                      const SizedBox(height: 10.0),
                       TextFormField(
-                        controller: controllerCode,
+                        controller: controllerFirstname,
                         decoration: InputDecoration(
-                          hintText: 'Verification Code',
+                          hintText: 'Firstname',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        validator: validateCode,
+                        validator: (v) => v!.isEmpty ? "Vui lòng nhập firstname" : null,
                       ),
-                      const SizedBox(height: 10.0),
+                    if (!codeSent) const SizedBox(height: 10.0),
+
+                    // LASTNAME
+                    if (!codeSent)
+                      TextFormField(
+                        controller: controllerLastname,
+                        decoration: InputDecoration(
+                          hintText: 'Lastname',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        validator: (v) => v!.isEmpty ? "Vui lòng nhập lastname" : null,
+                      ),
+                    if (!codeSent) const SizedBox(height: 10.0),
+
+                    // PASSWORD
+                    if (!codeSent)
                       TextFormField(
                         controller: controllerPassword,
                         obscureText: _isObsecure,
@@ -189,7 +200,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         validator: validatePassword,
                       ),
-                      const SizedBox(height: 10.0),
+                    if (!codeSent) const SizedBox(height: 10.0),
+
+                    // RETYPE PASSWORD
+                    if (!codeSent)
                       TextFormField(
                         controller: controllerRetypePassword,
                         obscureText: _isObsecure,
@@ -211,10 +225,34 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         validator: validateRetypePassword,
                       ),
+                    if (!codeSent) const SizedBox(height: 20.0),
+
+                    // BUTTON SEND CODE
+                    if (!codeSent)
+                      ElevatedButton(
+                        onPressed: onPressedSendCode,
+                        child: const Text("Send Code"),
+                      ),
+
+                    // ------------------------ //
+                    // AFTER SEND CODE UI
+                    // ------------------------ //
+                    if (codeSent) ...[
+                      const SizedBox(height: 20.0),
+                      TextFormField(
+                        controller: controllerCode,
+                        decoration: InputDecoration(
+                          hintText: 'Verification Code',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        validator: validateCode,
+                      ),
                       const SizedBox(height: 20.0),
                       ElevatedButton(
                         onPressed: onPressedRegister,
-                        child: const Text("Register"),
+                        child: const Text("Confirm Register"),
                       ),
                     ],
                   ],

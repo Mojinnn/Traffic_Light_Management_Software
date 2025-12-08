@@ -11,7 +11,7 @@ class ProfilePage extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 50.0,
-          backgroundImage: AssetImage('assets/images/cr7.jpg'),
+          backgroundImage: AssetImage('assets/images/avatar-an-danh-1.webp'),
         ),
         ListTile(
           title: Text('Logout'),
