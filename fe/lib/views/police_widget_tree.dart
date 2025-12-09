@@ -1,9 +1,9 @@
 import 'package:first_flutter/data/constants.dart';
 import 'package:first_flutter/data/notifiers.dart';
 import 'package:first_flutter/views/pages/police/police_home.dart';
+import 'package:first_flutter/views/pages/police/police_notify.dart';
+import 'package:first_flutter/views/pages/police/police_profile.dart';
 // import 'package:first_flutter/views/pages/home_page.dart';
-import 'package:first_flutter/views/pages/profile_page.dart';
-import 'package:first_flutter/views/pages/settings_page.dart';
 import 'package:first_flutter/views/widgets/navbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,6 +69,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // }
 
 List<Widget> pages = [PoliceHome(), ProfilePage()];
+  
 
 class PoliceWidgetTree extends StatelessWidget {
   const PoliceWidgetTree({super.key});
@@ -80,6 +81,47 @@ class PoliceWidgetTree extends StatelessWidget {
         title: Text('Traffic Controller'),
         centerTitle: true,
         actions: [
+          IconButton(
+            onPressed: () {
+              // Khi nhấn vào notify → reset badge
+              hasNewNotifyNotifier.value = false;
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PoliceNotify()),
+              );
+            },
+            icon: ValueListenableBuilder(
+              valueListenable: hasNewNotifyNotifier,
+              builder: (context, hasNewNotify, child) {
+                return Stack(
+                  children: [
+                    Icon(
+                      hasNewNotify
+                          ? Icons.notifications_active
+                          : Icons.notifications_none,
+                      size: 28,
+                    ),
+
+                    // Nếu có notify mới → chấm đỏ ở góc
+                    if (hasNewNotify)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ),
           IconButton(
             onPressed: () async {
               isDarkModeNotifier.value = !isDarkModeNotifier.value;
@@ -96,17 +138,6 @@ class PoliceWidgetTree extends StatelessWidget {
                 return Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode);
               },
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SettingsPage(title: 'Settings'),
-                ),
-              );
-            },
-            icon: Icon(Icons.settings),
           ),
         ],
       ),

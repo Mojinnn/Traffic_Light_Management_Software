@@ -64,6 +64,7 @@
 import 'package:first_flutter/data/constants.dart';
 import 'package:first_flutter/data/notifiers.dart';
 import 'package:first_flutter/services/future_service.dart';
+import 'package:first_flutter/services/notify_service.dart';
 import 'package:first_flutter/views/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,6 +75,7 @@ void main() async {
 
   // Khởi tạo FeatureService trước khi chạy app
   await FeatureService().initialize();
+  NotifyService().startMockNotification();
 
   runApp(const MyApp());
 }

@@ -2,7 +2,6 @@ import 'package:first_flutter/data/constants.dart';
 import 'package:first_flutter/data/notifiers.dart';
 // import 'package:first_flutter/views/pages/home_page.dart';
 import 'package:first_flutter/views/pages/viewer/viewer_profile.dart';
-import 'package:first_flutter/views/pages/settings_page.dart';
 import 'package:first_flutter/views/widgets/navbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,17 +95,6 @@ class ViewerWidgetTree extends StatelessWidget {
                 return Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode);
               },
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SettingsPage(title: 'Settings'),
-                ),
-              );
-            },
-            icon: Icon(Icons.settings),
           ),
         ],
       ),
