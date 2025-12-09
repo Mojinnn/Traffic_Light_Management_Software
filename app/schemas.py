@@ -111,3 +111,12 @@ class RegisterSendCodeIn(BaseModel):
 class RegisterConfirmIn(BaseModel):
     email: EmailStr
     code: str
+class FeatureBase(BaseModel):
+    featureId: str
+    isEnabled: bool
+
+class FeatureOut(FeatureBase):
+    pass
+
+class FeatureList(BaseModel):
+    features: list[FeatureOut]

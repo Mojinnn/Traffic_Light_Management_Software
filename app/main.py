@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from fastapi.middleware.cors import CORSMiddleware
 import io, requests
 from . import database
-
+from . import feature_router
 from .database import engine, Base, SessionLocal
 from . import models, schemas, auth, mqtt_client, utils, ai_ingest
 from .auth import role_required
@@ -74,9 +74,14 @@ def get_db():
 
 
 # ---------- Routers ----------
+
 app.include_router(auth.router)
 app.include_router(ai_ingest.router)
-
+app.include_router(feature_router.router)
+#-------FEATURE RUNNING-------
+@app.get("/")
+def root():
+    return {"message": "Feature Toggle API running!"}
 # ---------- Default lights ----------
 def init_default_lights():
     db = database.SessionLocal()
@@ -255,6 +260,7 @@ def me(user: models.User = Depends(auth.get_current_user)):
 @app.get("/api/users", response_model=list[schemas.UserOut])
 def list_users(db: Session = Depends(get_db), user: models.User = Depends(role_required(["admin"]))):
     return db.query(models.User).all()
+
 @app.delete("/api/users/{user_id}", status_code=200)
 def delete_user(
     user_id: int,
@@ -278,8 +284,42 @@ def delete_user(
     db.commit()
 
     return {"message": f"User {user.email} deleted successfully."}
+"""
+@app.post("/features")
+def update_feature(data: schemas.FeatureBase,
+                   db: Session = Depends(get_db),
+                   user: models.User = Depends(role_required(["admin"]))):
 
+    feature = db.query(models.Feature).filter(
+        models.Feature.feature_id == data.featureId
+    ).first()
 
+    if not feature:
+        feature = models.Feature(
+            feature_id=data.featureId,
+            is_enabled=data.isEnabled
+        )
+        db.add(feature)
+    else:
+        feature.is_enabled = data.isEnabled
+
+    db.commit()
+    db.refresh(feature)
+    return {"message": "Feature updated"}
+
+@app.get("/features")
+def get_features(db: Session = Depends(get_db)):
+    features = db.query(models.Feature).all()
+    return {
+        "features": [
+            {
+                "featureId": f.feature_id,
+                "isEnabled": f.is_enabled
+            }
+            for f in features
+        ]
+    }
+"""
 """
 # ---------- Camera snapshot ----------
 @app.get("/api/camera/snapshot")

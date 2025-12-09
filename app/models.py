@@ -75,3 +75,9 @@ class ResetToken(Base):
     token = Column(String, unique=True)
     expires_at = Column(DateTime)
 
+class Feature(Base):
+    __tablename__ = "features"
+
+    id = Column(Integer, primary_key=True, index=True)
+    feature_id = Column(String, unique=True, index=True)
+    is_enabled = Column(Boolean, default=True)
