@@ -81,7 +81,7 @@ def ingest_traffic(
 
     # ===== Nếu KHÔNG có hướng nào vượt ngưỡng → RESET LIGHT =====
     else:
-        DEFAULT_LIGHT = {"red": 25, "yellow": 3, "green": 22}
+        DEFAULT_LIGHT = {"red": 30, "yellow": 3, "green": 27}
         lights = db.query(models.LightSetting).all()
         for light in lights:
             light.red = DEFAULT_LIGHT["red"]

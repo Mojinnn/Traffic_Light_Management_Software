@@ -41,10 +41,11 @@ class LightSetting(Base):
     __tablename__ = "light_settings"
     id = Column(Integer, primary_key=True, index=True)
     intersection = Column(String, unique=True, index=True)
-    red = Column(Integer, default=10)
+    red = Column(Integer, default=30)
     yellow = Column(Integer, default=3)
-    green = Column(Integer, default=12)
+    green = Column(Integer, default=27)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
 
 class AlertLog(Base):
     __tablename__ = "alert_logs"

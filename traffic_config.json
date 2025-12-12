@@ -1,0 +1,21 @@
+{
+  "mode": "MANUAL",
+  "timerConfig": {
+    "North": {
+      "red": 34,
+      "green": 45
+    },
+    "South": {
+      "red": 34,
+      "green": 45
+    },
+    "East": {
+      "red": 48,
+      "green": 27
+    },
+    "West": {
+      "red": 48,
+      "green": 27
+    }
+  }
+}

@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import io, requests
 from . import database
 from . import feature_router
+from . import traffic
 from .database import engine, Base, SessionLocal
 from . import models, schemas, auth, mqtt_client, utils, ai_ingest
 from .auth import role_required
@@ -52,6 +53,9 @@ if os.path.isdir(static_dir):
 @app.on_event("startup")
 def startup():
     mqtt_client.start_in_thread()
+    # ← THÊM DÒNG NÀY
+    traffic.start_traffic_system()
+    
     db = SessionLocal()
     admin_email = os.environ.get("ADMIN_EMAIL")
     admin_pass = os.environ.get("ADMIN_PASS")
@@ -64,8 +68,8 @@ def startup():
             print("Seeded admin user:", admin_email)
     db.close()
 
-# ---------- Dependency ----------
-def get_db():
+# ---------- Dependency ---------- 
+def get_db(): 
     db = SessionLocal()
     try:
         yield db
@@ -78,11 +82,13 @@ def get_db():
 app.include_router(auth.router)
 app.include_router(ai_ingest.router)
 app.include_router(feature_router.router)
+app.include_router(traffic.router)
 #-------FEATURE RUNNING-------
 @app.get("/")
 def root():
     return {"message": "Feature Toggle API running!"}
 # ---------- Default lights ----------
+
 def init_default_lights():
     db = database.SessionLocal()
     defaults = ["north", "south", "east", "west"]
@@ -191,7 +197,68 @@ def set_light(
     )
     return row
 
+"""
+# app/routes/traffic_lights.py
 
+
+
+
+
+DEFAULT_TIMERS = {
+    "north": {"red": 30, "yellow": 3, "green": 27},
+    "south": {"red": 30, "yellow": 3, "green": 27},
+    "east":  {"red": 30, "yellow": 3, "green": 27},
+    "west":  {"red": 30, "yellow": 3, "green": 27},
+}
+
+# ---------------------------------------------------------
+# INIT DATA (GỌI 1 LẦN LÚC START SERVER)
+# ---------------------------------------------------------
+def init_default_lights(db: Session):
+    for inter, val in DEFAULT_TIMERS.items():
+        exists = db.query(models.TrafficLight).filter_by(intersection=inter).first()
+        if not exists:
+            db.add(models.TrafficLight(
+                intersection=inter,
+                red=val["red"],
+                yellow=val["yellow"],
+                green=val["green"],
+            ))
+    db.commit()
+
+# ---------------------------------------------------------
+# GET (Frontend khi chọn AUTO sẽ lấy timer từ đây)
+# ---------------------------------------------------------
+@app.get("/api/lights", response_model=list[schemas.TrafficLightOut])
+def get_lights(db: Session = Depends(get_db)):
+    lights = db.query(models.TrafficLight).all()
+    return lights
+
+
+# ---------------------------------------------------------
+# POST Update 1 hướng (Frontend Apply Changes)
+# ---------------------------------------------------------
+@app.post("/api/lights", response_model=schemas.TrafficLightOut)
+def update_light(data: schemas.TrafficLightBase, db: Session = Depends(get_db)):
+    inter = data.intersection.lower()
+
+    light = db.query(models.TrafficLight).filter_by(intersection=inter).first()
+
+    if not light:
+        raise HTTPException(status_code=404, detail="Intersection not found")
+
+    light.red = data.red
+    light.yellow = data.yellow
+    light.green = data.green
+
+    db.commit()
+    db.refresh(light)
+
+    return light
+@app.get("/")
+def root():
+    return {"message": "Traffic Manager API running!"}
+"""
 """
 # ---------- Light control ----------
 @app.get("/api/lights", response_model=list[schemas.LightSettingOut])
