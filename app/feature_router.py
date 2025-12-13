@@ -1,12 +1,39 @@
 # app/feature_router.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .database import get_db
+from .database import get_db, SessionLocal
 from . import models, schemas, auth
 
 router = APIRouter(prefix="/api/features", tags=["features"])
-
-
+DEFAULT_FEATURES = [
+    "viewer_view_traffic",
+    "police_view_traffic",
+    "police_modify_lights",
+    "police_receive_notification",
+    "admin_stream_camera",
+    "admin_monitor_traffic",
+    "admin_send_notification",
+    "admin_display_lights",
+]
+def seed_features():
+    db: Session = SessionLocal()
+    try:
+        for fid in DEFAULT_FEATURES:
+            exists = (
+                db.query(models.Feature)
+                .filter(models.Feature.feature_id == fid)
+                .first()
+            )
+            if not exists:
+                db.add(models.Feature(
+                    feature_id=fid,
+                    is_enabled=True
+                ))
+        db.commit()
+        print("✅ Features seeded")
+    finally:
+        db.close()
+        
 # =========================
 # ADMIN GUARD
 # =========================

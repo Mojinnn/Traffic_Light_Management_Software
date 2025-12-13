@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, func, Text
 from sqlalchemy.orm import relationship
 from .database import Base
 
+from datetime import datetime
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -37,14 +38,14 @@ class TrafficCount(Base):
     east = Column(Integer, default=0)
     west = Column(Integer, default=0)
 
-class LightSetting(Base):
-    __tablename__ = "light_settings"
-    id = Column(Integer, primary_key=True, index=True)
-    intersection = Column(String, unique=True, index=True)
-    red = Column(Integer, default=30)
-    yellow = Column(Integer, default=3)
-    green = Column(Integer, default=27)
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+# class LightSetting(Base):
+#     __tablename__ = "light_settings"
+#     id = Column(Integer, primary_key=True, index=True)
+#     intersection = Column(String, unique=True, index=True)
+#     red = Column(Integer, default=30)
+#     yellow = Column(Integer, default=3)
+#     green = Column(Integer, default=27)
+#     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
 class AlertLog(Base):
@@ -82,3 +83,11 @@ class Feature(Base):
     id = Column(Integer, primary_key=True, index=True)
     feature_id = Column(String, unique=True, index=True)
     is_enabled = Column(Boolean, default=True)
+class TrafficLight(Base):
+    __tablename__ = "traffic_lights"
+    id = Column(Integer, primary_key=True, index=True)
+    intersection_id = Column(String, unique=True, index=True)  # 'north','south','east','west'
+    red = Column(Integer, default=30)
+    yellow = Column(Integer, default=3)
+    green = Column(Integer, default=27)
+    updated_at = Column(DateTime, default=datetime.utcnow)

@@ -8,6 +8,9 @@ from threading import Thread, Lock
 import json
 import os
 
+from .database import SessionLocal
+from . import models
+
 router = APIRouter(prefix="/traffic-lights", tags=["Traffic Lights"])
 
 # ============================================
@@ -17,7 +20,7 @@ router = APIRouter(prefix="/traffic-lights", tags=["Traffic Lights"])
 CONFIG_FILE = "traffic_config.json"
 YELLOW_DURATION = 3
 
-# AUTO fixed: xanh 27s, vàng 3s => hướng đối diện đỏ ~ 30s
+# AUTO fixed: xanh 27s, vàng 3s
 AUTO_FIXED_TIMER: Dict[str, Dict[str, int]] = {
     "North": {"red": 30, "green": 27},
     "South": {"red": 30, "green": 27},
@@ -36,7 +39,7 @@ ModeLiteral = Literal["AUTO", "MANUAL", "EMERGENCY", "AI-BASED"]
 LightStateLiteral = Literal["red", "yellow", "green"]
 
 # ============================================
-# DATA MODELS
+# API MODELS
 # ============================================
 
 class TimerPhase(BaseModel):
@@ -51,8 +54,7 @@ class TimerConfig(BaseModel):
 
 class TrafficControlRequest(BaseModel):
     mode: ModeLiteral
-    # AUTO/EMERGENCY không bắt buộc gửi timerConfig
-    timerConfig: Optional[TimerConfig] = None
+    timerConfig: Optional[TimerConfig] = None  # AUTO/EMERGENCY không bắt buộc
 
 class LightStatus(BaseModel):
     id: int
@@ -69,13 +71,8 @@ class ConfigResponse(BaseModel):
     mode: str
     timerConfig: Dict[str, Dict[str, int]]
 
-# (Optional) nếu sau này bạn dùng
-class ManualControlRequest(BaseModel):
-    lightId: int
-    state: LightStateLiteral
-
 # ============================================
-# GLOBAL STATE
+# GLOBAL STATE (RAM)
 # ============================================
 
 traffic_state = {
@@ -92,11 +89,60 @@ state_lock = Lock()
 update_thread: Optional[Thread] = None
 
 # ============================================
-# HELPERS (NO DEADLOCK)
+# DB: SAVE FIXED SNAPSHOT (ONLY ON APPLY/LOAD)
+# ============================================
+
+def _save_to_traffic_lights_4ways(snapshot: Dict) -> None:
+    """
+    Lưu snapshot cố định vào bảng traffic_lights:
+    - intersection_id: north/south/east/west
+    - red/yellow/green theo timerConfig
+    - EMERGENCY -> 0/0/0
+    Chỉ gọi khi APPLY hoặc khi load_config startup.
+    """
+    db = SessionLocal()
+    try:
+        mode = snapshot.get("mode", "AUTO")
+        cfg = snapshot.get("timerConfig", AUTO_FIXED_TIMER)
+
+        mapping = {
+            "North": "north",
+            "South": "south",
+            "East": "east",
+            "West": "west",
+        }
+
+        now = datetime.utcnow()
+
+        for k, db_dir in mapping.items():
+            row = db.query(models.TrafficLight).filter_by(intersection_id=db_dir).first()
+            if not row:
+                row = models.TrafficLight(intersection_id=db_dir)
+                db.add(row)
+
+            if mode == "EMERGENCY":
+                row.red = 0
+                row.yellow = 0
+                row.green = 0
+            else:
+                row.red = int(cfg[k]["red"])
+                row.yellow = YELLOW_DURATION
+                row.green = int(cfg[k]["green"])
+
+            row.updated_at = now
+
+        db.commit()
+        print(f"✅ Saved 4-way snapshot to traffic_lights (mode={mode})")
+    except Exception as e:
+        print(f"❌ DB save traffic_lights error: {e}")
+    finally:
+        db.close()
+
+# ============================================
+# FILE SAVE/LOAD (NO DEADLOCK)
 # ============================================
 
 def _normalize_timer_config_dict(cfg: Dict) -> Dict[str, Dict[str, int]]:
-    """Ensure full keys exist and clamp values."""
     out: Dict[str, Dict[str, int]] = {}
     for d in ["North", "South", "East", "West"]:
         phases = cfg.get(d, {}) if isinstance(cfg, dict) else {}
@@ -107,15 +153,15 @@ def _normalize_timer_config_dict(cfg: Dict) -> Dict[str, Dict[str, int]]:
         out[d] = {"red": red, "green": green}
     return out
 
-def _snapshot_for_save() -> Dict:
-    """Return snapshot dict for saving to file. Must be called WITH lock held."""
+def _snapshot_for_save_locked() -> Dict:
+    """Must be called WITH lock held."""
     return {
         "mode": traffic_state["mode"],
         "timerConfig": traffic_state["timerConfig"],
     }
 
-def _save_config_snapshot(snapshot: Dict) -> None:
-    """Save snapshot to file WITHOUT acquiring state_lock (avoids deadlock)."""
+def _save_config_snapshot_to_file(snapshot: Dict) -> None:
+    """Save config to file WITHOUT acquiring state_lock."""
     try:
         with open(CONFIG_FILE, "w") as f:
             json.dump(snapshot, f, indent=2)
@@ -124,8 +170,11 @@ def _save_config_snapshot(snapshot: Dict) -> None:
         print(f"❌ Error saving traffic config: {e}")
 
 def load_config():
-    """Load persisted config file, then set state safely."""
+    """Load persisted config file and apply to runtime state safely."""
     if not os.path.exists(CONFIG_FILE):
+        # Không có file -> dùng AUTO mặc định + sync DB 1 lần để có 4 hướng
+        snap = {"mode": "AUTO", "timerConfig": AUTO_FIXED_TIMER.copy()}
+        _save_to_traffic_lights_4ways(snap)
         return
 
     try:
@@ -140,30 +189,42 @@ def load_config():
                 traffic_state["mode"] = "AUTO"
                 traffic_state["timerConfig"] = AUTO_FIXED_TIMER.copy()
                 _reset_cycle_locked(phase=1)
+
             elif mode == "MANUAL":
                 traffic_state["mode"] = "MANUAL"
                 traffic_state["timerConfig"] = _normalize_timer_config_dict(timer_cfg)
                 _reset_cycle_locked(phase=1)
+
             elif mode == "AI-BASED":
                 traffic_state["mode"] = "AI-BASED"
-                # placeholder: keep saved config or fixed; mình chọn fixed cho ổn định
                 traffic_state["timerConfig"] = AUTO_FIXED_TIMER.copy()
                 _reset_cycle_locked(phase=1)
+
             elif mode == "EMERGENCY":
                 traffic_state["mode"] = "EMERGENCY"
                 traffic_state["timerConfig"] = _normalize_timer_config_dict(timer_cfg)
                 _set_emergency_locked()
+
             else:
                 traffic_state["mode"] = "AUTO"
                 traffic_state["timerConfig"] = AUTO_FIXED_TIMER.copy()
                 _reset_cycle_locked(phase=1)
 
+            snap = _snapshot_for_save_locked()
+
         print("✅ Traffic config loaded from file")
+
+        # ✅ sync DB 1 lần khi startup
+        _save_to_traffic_lights_4ways(snap)
+
     except Exception as e:
         print(f"❌ Error loading traffic config: {e}")
 
+# ============================================
+# CYCLE / PHASE LOGIC (LOCKED)
+# ============================================
+
 def get_phase_duration_locked(phase: int) -> int:
-    """Get duration for the given phase (requires state_lock held)."""
     cfg = traffic_state["timerConfig"]
     if phase == 1:
         return int(cfg["East"]["green"])      # E/W green
@@ -182,7 +243,7 @@ def _set_emergency_locked():
         light["remainingTime"] = 0
 
 def _reset_cycle_locked(phase: int = 1):
-    """Reset cycle timing + immediately apply phase to lights."""
+    """Reset cycle timing + apply current phase to lights."""
     now = time.time()
     traffic_state["currentPhase"] = phase
     traffic_state["phaseStartTime"] = now
@@ -192,47 +253,34 @@ def _reset_cycle_locked(phase: int = 1):
     _apply_phase_to_lights_locked(phase=phase, remaining=dur)
 
 def _apply_phase_to_lights_locked(phase: int, remaining: int):
-    """
-    Update lights based on phase and remaining time (lock held).
-
-    Convention:
-    - remaining = time left for CURRENT phase only
-    - For RED lights: remainingTime = time left until they turn GREEN (next green start)
-    """
-
     # indices: 0=N,1=S,2=E,3=W
     if phase == 1:
-        # Phase 1: East/West GREEN, North/South RED
+        # E/W GREEN, N/S RED
         traffic_state["lights"][0]["state"] = "red"
         traffic_state["lights"][1]["state"] = "red"
         traffic_state["lights"][2]["state"] = "green"
         traffic_state["lights"][3]["state"] = "green"
 
-        # N/S will turn GREEN at start of Phase 3:
-        # time left = remaining(E/W green) + yellow(E/W)
         ns_red = remaining + YELLOW_DURATION
         traffic_state["lights"][0]["remainingTime"] = ns_red
         traffic_state["lights"][1]["remainingTime"] = ns_red
-
         traffic_state["lights"][2]["remainingTime"] = remaining
         traffic_state["lights"][3]["remainingTime"] = remaining
 
     elif phase == 2:
-        # Phase 2: East/West YELLOW, North/South RED
+        # E/W YELLOW, N/S RED
         traffic_state["lights"][0]["state"] = "red"
         traffic_state["lights"][1]["state"] = "red"
         traffic_state["lights"][2]["state"] = "yellow"
         traffic_state["lights"][3]["state"] = "yellow"
 
-        # During E/W yellow, N/S still red and will turn green when this yellow ends
         traffic_state["lights"][0]["remainingTime"] = remaining
         traffic_state["lights"][1]["remainingTime"] = remaining
-
         traffic_state["lights"][2]["remainingTime"] = remaining
         traffic_state["lights"][3]["remainingTime"] = remaining
 
     elif phase == 3:
-        # Phase 3: North/South GREEN, East/West RED
+        # N/S GREEN, E/W RED
         traffic_state["lights"][0]["state"] = "green"
         traffic_state["lights"][1]["state"] = "green"
         traffic_state["lights"][2]["state"] = "red"
@@ -241,14 +289,12 @@ def _apply_phase_to_lights_locked(phase: int, remaining: int):
         traffic_state["lights"][0]["remainingTime"] = remaining
         traffic_state["lights"][1]["remainingTime"] = remaining
 
-        # E/W will turn GREEN at start of Phase 1:
-        # time left = remaining(N/S green) + yellow(N/S)
         ew_red = remaining + YELLOW_DURATION
         traffic_state["lights"][2]["remainingTime"] = ew_red
         traffic_state["lights"][3]["remainingTime"] = ew_red
 
     elif phase == 4:
-        # Phase 4: North/South YELLOW, East/West RED
+        # N/S YELLOW, E/W RED
         traffic_state["lights"][0]["state"] = "yellow"
         traffic_state["lights"][1]["state"] = "yellow"
         traffic_state["lights"][2]["state"] = "red"
@@ -256,13 +302,10 @@ def _apply_phase_to_lights_locked(phase: int, remaining: int):
 
         traffic_state["lights"][0]["remainingTime"] = remaining
         traffic_state["lights"][1]["remainingTime"] = remaining
-
-        # During N/S yellow, E/W still red and will turn green when this yellow ends
         traffic_state["lights"][2]["remainingTime"] = remaining
         traffic_state["lights"][3]["remainingTime"] = remaining
 
 def _update_cycle_locked():
-    """Advance phase + update remaining time (lock held)."""
     now = time.time()
     phase = traffic_state["currentPhase"]
     phase_start = traffic_state["phaseStartTime"]
@@ -282,8 +325,12 @@ def _update_cycle_locked():
     remaining = max(0, int(duration - elapsed))
     _apply_phase_to_lights_locked(phase=phase, remaining=remaining)
 
+# ============================================
+# BACKGROUND THREAD (NO DB WRITES HERE)
+# ============================================
+
 def update_traffic_lights():
-    """Background update thread."""
+    """Background update thread. (NO DB writes here)"""
     while True:
         try:
             with state_lock:
@@ -318,6 +365,7 @@ def start_traffic_system():
 
 @router.get("/status", response_model=TrafficStatusResponse)
 async def get_status():
+    """Realtime status (RAM)."""
     with state_lock:
         return {
             "mode": traffic_state["mode"],
@@ -327,6 +375,7 @@ async def get_status():
 
 @router.get("/config", response_model=ConfigResponse)
 async def get_config():
+    """Current config (RAM)."""
     with state_lock:
         return {
             "mode": traffic_state["mode"],
@@ -341,6 +390,7 @@ async def control_lights(request: TrafficControlRequest):
     - MANUAL: apply timerConfig
     - EMERGENCY: all red
     - AI-BASED: placeholder = AUTO fixed
+    DB: chỉ lưu snapshot cố định 4 hướng khi APPLY.
     """
     snapshot: Optional[Dict] = None
 
@@ -366,12 +416,14 @@ async def control_lights(request: TrafficControlRequest):
             elif request.mode == "EMERGENCY":
                 _set_emergency_locked()
 
-            # snapshot inside lock
-            snapshot = _snapshot_for_save()
+            snapshot = _snapshot_for_save_locked()
 
-        # ✅ save outside lock (no deadlock)
+        # ✅ save outside lock (avoid deadlock)
         if snapshot is not None:
-            _save_config_snapshot(snapshot)
+            _save_config_snapshot_to_file(snapshot)
+
+            # ✅ save fixed snapshot to DB (ONLY ON APPLY)
+            _save_to_traffic_lights_4ways(snapshot)
 
         return {"success": True, "message": "Configuration updated successfully"}
 
@@ -387,4 +439,3 @@ async def health_check():
         "timestamp": datetime.now().isoformat(),
         "mode": traffic_state["mode"],
     }
-#dacapnhap

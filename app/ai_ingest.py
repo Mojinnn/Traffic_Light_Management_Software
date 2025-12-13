@@ -9,12 +9,7 @@ import requests
 from .auth import role_required
 router = APIRouter(prefix="/api")
 
-# ==========================
-# Cấu hình
-# ==========================
-ALERT_THRESHOLD = int(os.environ.get("ALERT_THRESHOLD", 15))  # Ngưỡng cảnh báo
-DEFAULT_LIGHT = {"red": 25, "yellow": 3, "green": 22}         # Thời gian đèn mặc định
-#BACKEND_LIGHT_URL = "http://127.0.0.1:8000/api/lights"        # API để chỉnh đèn mặc định
+ALERT_THRESHOLD = int(os.environ.get("ALERT_THRESHOLD", 15))  # Ngưỡng cảnh báo     
 
 def get_db():
     db = database.SessionLocal()
@@ -78,16 +73,6 @@ def ingest_traffic(
                 "[Traffic Alert] High Traffic Detected",
                 msg
             )
-
-    # ===== Nếu KHÔNG có hướng nào vượt ngưỡng → RESET LIGHT =====
-    else:
-        DEFAULT_LIGHT = {"red": 30, "yellow": 3, "green": 27}
-        lights = db.query(models.LightSetting).all()
-        for light in lights:
-            light.red = DEFAULT_LIGHT["red"]
-            light.yellow = DEFAULT_LIGHT["yellow"]
-            light.green = DEFAULT_LIGHT["green"]
-        db.commit()
 
     return {"ok": True}
 # ==========================

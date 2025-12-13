@@ -7,8 +7,10 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from fastapi.middleware.cors import CORSMiddleware
 import io, requests
-from . import database
+
 from . import feature_router
+from app.feature_router import seed_features
+
 from . import traffic
 from .database import engine, Base, SessionLocal
 from . import models, schemas, auth, mqtt_client, utils, ai_ingest
@@ -34,28 +36,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 # ---------- Root ----------
 @app.get("/")
 def read_root():
     return {"message": "Traffic Manager API is running!"}
-
-
-"""
-# ---------- Static files (frontend nếu có) ----------
-static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
-if os.path.isdir(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
-"""
-
 # ---------- Startup: MQTT + seed admin ----------
 @app.on_event("startup")
 def startup():
     mqtt_client.start_in_thread()
     # ← THÊM DÒNG NÀY
     traffic.start_traffic_system()
-    
+    seed_features()
     db = SessionLocal()
     admin_email = os.environ.get("ADMIN_EMAIL")
     admin_pass = os.environ.get("ADMIN_PASS")
@@ -90,20 +81,21 @@ def root():
 # ---------- Default lights ----------
 
 def init_default_lights():
-    db = database.SessionLocal()
+    db = SessionLocal()
     defaults = ["north", "south", "east", "west"]
 
     for d in defaults:
-        existing = db.query(models.LightSetting).filter(
-            models.LightSetting.intersection == d
+        existing = db.query(models.TrafficLight).filter(
+            models.TrafficLight.intersection_id == d
         ).first()
 
         if not existing:
-            row = models.LightSetting(
-                intersection=d,
-                red=25,
+            row = models.TrafficLight(
+                intersection_id=d,
+                red=30,
                 yellow=3,
-                green=22
+                green=27,
+                updated_at=datetime.utcnow()
             )
             db.add(row)
 
@@ -113,89 +105,89 @@ def init_default_lights():
 # Tạo bản ghi mặc định khi khởi động
 init_default_lights()
 
-ALERT_THRESHOLD = int(os.environ.get("ALERT_THRESHOLD", 15))  # Ngưỡng cảnh báo
-# ---------- LIGHT CONTROL ----------
-DEFAULT_LIGHT = {"red": 25, "yellow": 3, "green": 22}
+# ALERT_THRESHOLD = int(os.environ.get("ALERT_THRESHOLD", 15))  # Ngưỡng cảnh báo
+# # ---------- LIGHT CONTROL ----------
+# DEFAULT_LIGHT = {"red": 25, "yellow": 3, "green": 22}
 
-@app.get("/api/lights", response_model=list[schemas.LightSettingOut])
-def list_lights(db: Session = Depends(get_db), user: models.User = Depends(auth.get_current_user)):
+# @app.get("/api/lights", response_model=list[schemas.LightSettingOut])
+# def list_lights(db: Session = Depends(get_db), user: models.User = Depends(auth.get_current_user)):
 
-    rows = db.query(models.LightSetting).all()
+#     rows = db.query(models.LightSetting).all()
 
     
-    # Nếu chưa có dữ liệu → tạo mặc định
-    if not rows:
-        intersections = ["north", "south", "east", "west"]
-        created = []
-        for inter in intersections:
-            row = models.LightSetting(
-                intersection=inter,
-                red=DEFAULT_LIGHT["red"],
-                yellow=DEFAULT_LIGHT["yellow"],
-                green=DEFAULT_LIGHT["green"]
-            )
-            db.add(row)
-            created.append(row)
-        db.commit()
-        return created
+#     # Nếu chưa có dữ liệu → tạo mặc định
+#     if not rows:
+#         intersections = ["north", "south", "east", "west"]
+#         created = []
+#         for inter in intersections:
+#             row = models.LightSetting(
+#                 intersection=inter,
+#                 red=DEFAULT_LIGHT["red"],
+#                 yellow=DEFAULT_LIGHT["yellow"],
+#                 green=DEFAULT_LIGHT["green"]
+#             )
+#             db.add(row)
+#             created.append(row)
+#         db.commit()
+#         return created
 
-    # ----- KIỂM TRA TRAFFIC COUNT MỚI NHẤT -----
-    latest_traffic = db.query(models.TrafficCount).order_by(models.TrafficCount.id.desc()).first()
-    if latest_traffic:
-        directions = {
-            "north": latest_traffic.north,
-            "south": latest_traffic.south,
-            "east": latest_traffic.east,
-            "west": latest_traffic.west
-        }
-        exceeded = [d for d, v in directions.items() if v >= ALERT_THRESHOLD]
+#     # ----- KIỂM TRA TRAFFIC COUNT MỚI NHẤT -----
+#     latest_traffic = db.query(models.TrafficCount).order_by(models.TrafficCount.id.desc()).first()
+#     if latest_traffic:
+#         directions = {
+#             "north": latest_traffic.north,
+#             "south": latest_traffic.south,
+#             "east": latest_traffic.east,
+#             "west": latest_traffic.west
+#         }
+#         exceeded = [d for d, v in directions.items() if v >= ALERT_THRESHOLD]
 
-        # Nếu không có hướng nào vượt ngưỡng → reset tất cả đèn về mặc định
-        if not exceeded:
-            for row in rows:
-                row.red = DEFAULT_LIGHT["red"]
-                row.yellow = DEFAULT_LIGHT["yellow"]
-                row.green = DEFAULT_LIGHT["green"]
-            db.commit()
+#         # Nếu không có hướng nào vượt ngưỡng → reset tất cả đèn về mặc định
+#         if not exceeded:
+#             for row in rows:
+#                 row.red = DEFAULT_LIGHT["red"]
+#                 row.yellow = DEFAULT_LIGHT["yellow"]
+#                 row.green = DEFAULT_LIGHT["green"]
+#             db.commit()
 
-    return rows
+#     return rows
 
 
 
-@app.post("/api/lights", response_model=schemas.LightSettingOut)
-def set_light(
-    payload: schemas.LightSettingIn, 
-    db: Session = Depends(get_db),
-    user: models.User = Depends(role_required(["admin", "police"]))
-):
-    row = db.query(models.LightSetting).filter(
-        models.LightSetting.intersection == payload.intersection
-    ).first()
+# @app.post("/api/lights", response_model=schemas.LightSettingOut)
+# def set_light(
+#     payload: schemas.LightSettingIn, 
+#     db: Session = Depends(get_db),
+#     user: models.User = Depends(role_required(["admin", "police"]))
+# ):
+#     row = db.query(models.LightSetting).filter(
+#         models.LightSetting.intersection == payload.intersection
+#     ).first()
 
-    if row:
-        row.red = payload.red
-        row.yellow = payload.yellow
-        row.green = payload.green
-    else:
-        row = models.LightSetting(
-            intersection=payload.intersection,
-            red=payload.red,
-            yellow=payload.yellow,
-            green=payload.green
-        )
-        db.add(row)
+#     if row:
+#         row.red = payload.red
+#         row.yellow = payload.yellow
+#         row.green = payload.green
+#     else:
+#         row = models.LightSetting(
+#             intersection=payload.intersection,
+#             red=payload.red,
+#             yellow=payload.yellow,
+#             green=payload.green
+#         )
+#         db.add(row)
 
-    db.commit()
-    db.refresh(row)
+#     db.commit()
+#     db.refresh(row)
 
-    # Publish MQTT → gửi xuống ESP
-    mqtt_client.publish_light(
-        row.intersection,
-        row.red,
-        row.yellow,
-        row.green
-    )
-    return row
+#     # Publish MQTT → gửi xuống ESP
+#     mqtt_client.publish_light(
+#         row.intersection,
+#         row.red,
+#         row.yellow,
+#         row.green
+#     )
+#     return row
 
 """
 # app/routes/traffic_lights.py

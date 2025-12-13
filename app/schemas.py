@@ -58,21 +58,21 @@ class TrafficCountOut(BaseModel):
         orm_mode = True
 
 
-class LightSettingIn(BaseModel):
-    intersection: str
-    red: int
-    yellow: int
-    green: int
+# class LightSettingIn(BaseModel):
+#     intersection: str
+#     red: int
+#     yellow: int
+#     green: int
 
-class LightSettingOut(BaseModel):
-    id: int
-    intersection: str
-    red: int
-    yellow: int
-    green: int
-    updated_at: Optional[datetime]
-    class Config:
-        orm_mode = True
+# class LightSettingOut(BaseModel):
+#     id: int
+#     intersection: str
+#     red: int
+#     yellow: int
+#     green: int
+#     updated_at: Optional[datetime]
+#     class Config:
+#         orm_mode = True
 
 class AlertLogOut(BaseModel):
     id: int
