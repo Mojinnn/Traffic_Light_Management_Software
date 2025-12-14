@@ -78,8 +78,16 @@ def send_verify_email(data: schemas.RegisterSendCodeIn, db: Session = Depends(ge
     # gửi email
     notify.send_mail_sync(
         [data.email],
-        "Verify your Traffic Manager account",
-        f"Your verification code is: {code}"
+        "Traffic Manager – Email Verification Code",
+        f"Hello,\n\n"
+        f"You are registering an account on the Traffic Manager system.\n\n"
+        f"Your verification code is:\n\n"
+        f"    {code}\n\n"
+        f"This verification code is valid for 10 minutes.\n"
+        f"Please do not share this code with anyone.\n\n"
+        f"If you did not request this email, please ignore it.\n\n"
+        f"Best regards,\n"
+        f"Traffic Manager Team"
     )
 
     return {"message": "Verification code sent"}
