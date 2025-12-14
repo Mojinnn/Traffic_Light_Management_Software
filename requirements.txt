@@ -8,3 +8,4 @@ python-multipart==0.0.20
 passlib[argon2]==1.7.4
 paho-mqtt==1.6.1
 email-validator==2.3.0
+sendgrid==6.11.0

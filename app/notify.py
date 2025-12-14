@@ -28,40 +28,32 @@
 
 # app/notify.py
 import os
-import smtplib
-from email.mime.text import MIMEText
 from typing import List
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp.sendgrid.net")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USER = os.getenv("SMTP_USER", "")
-SMTP_PASS = os.getenv("SMTP_PASS", "")
-MAIL_FROM = os.getenv("MAIL_FROM", SMTP_USER)
-
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "")
+MAIL_FROM = os.getenv("MAIL_FROM", "")
 
 def send_mail_sync(to_emails: List[str], subject: str, body: str):
-    if not SMTP_USER or not SMTP_PASS:
-        print("❌ SMTP not configured")
+    if not SENDGRID_API_KEY or not MAIL_FROM:
+        print("❌ SENDGRID not configured")
         return
 
     if isinstance(to_emails, str):
         to_emails = [to_emails]
 
-    msg = MIMEText(body, "plain", "utf-8")
-    msg["Subject"] = subject
-    msg["From"] = MAIL_FROM
-    msg["To"] = ", ".join(to_emails)
+    message = Mail(
+        from_email=MAIL_FROM,
+        to_emails=to_emails,
+        subject=subject,
+        plain_text_content=body
+    )
 
     try:
-        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15)
-        server.ehlo()
-        server.starttls()
-        server.login(SMTP_USER, SMTP_PASS)
-        server.sendmail(MAIL_FROM, to_emails, msg.as_string())
-        server.quit()
-
-        print(f"✅ Email sent to {to_emails}")
-
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        resp = sg.send(message)
+        print("✅ SendGrid API sent:", resp.status_code)
     except Exception as e:
-        print("❌ Send mail failed:", e)
+        print("❌ SendGrid API failed:", e)
         raise
