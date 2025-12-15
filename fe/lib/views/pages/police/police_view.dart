@@ -534,19 +534,25 @@ class _PoliceViewState extends State<PoliceView> {
   // ========================================
   // ⭐ CẤU HÌNH STREAM (GIỐNG CODE 2)
   // ========================================
+// ================= CLOUD FLARE BASE =================
+static const String baseUrl ='https://involvement-shapes-radiation-netscape.trycloudflare.com';
+
   final String esp32Ip = '10.10.59.238';
-  final String streamPath = '/detect'; // ví dụ: /detect hoặc /stream hoặc /video
+  
+// ================= STREAM =================
   final String streamViewType = 'police-stream-iframe';
+  final String videoStreamUrl = '$baseUrl/detect';
 
   bool isStreaming = false;
-
+  
   // Chart data - 4 hướng
   List<VehicleDataPoint> dataPoints = [];
   int maxDataPoints = 20;
   Timer? chartUpdateTimer;
 
   // API endpoints
-  final String vehicleCountUrl = "${AuthService.baseUrl}/api/traffic-count/latest";
+  // ================= VEHICLE COUNT =================
+final String vehicleCountUrl = '$baseUrl/lanes';
 
   @override
   void initState() {
@@ -571,26 +577,19 @@ class _PoliceViewState extends State<PoliceView> {
   // ⭐ ĐĂNG KÝ IFRAME CHO STREAM
   // ========================================
   void _registerStreamIframe() {
-    // nếu bạn muốn toggle play/pause thì có thể đổi src theo isStreaming
-    final url = 'http://$esp32Ip:5000$streamPath';
+  ui_web.platformViewRegistry.registerViewFactory(
+    streamViewType,
+    (int viewId) {
+      final iframe = html.IFrameElement()
+        ..src = videoStreamUrl
+        ..style.border = 'none'
+        ..style.width = '100%'
+        ..style.height = '100%';
 
-    ui_web.platformViewRegistry.registerViewFactory(
-      streamViewType,
-      (int viewId) {
-        final iframe = html.IFrameElement()
-          ..src = url
-          ..style.border = 'none'
-          ..style.width = '100%'
-          ..style.height = '100%'
-          ..style.overflow = 'hidden'
-          ..style.margin = '0'
-          ..style.padding = '0';
-
-        iframe.setAttribute('scrolling', 'no');
-        return iframe;
-      },
-    );
-  }
+      return iframe;
+    },
+  );
+}
 
   // --- Fetch dữ liệu từ backend ---
   Future<void> _fetchLatestData() async {
@@ -620,15 +619,21 @@ class _PoliceViewState extends State<PoliceView> {
   }
 
   // ------------------ Timer cập nhật chart --------------//
-  void startChartUpdate() {
-    chartUpdateTimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
-      await _fetchLatestData();
-    });
-  }
+  // void startChartUpdate() {
+  //   chartUpdateTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+  //     await _fetchLatestData();
+  //   });
+  // }
 
-  void stopChartUpdate() {
-    chartUpdateTimer?.cancel();
-  }
+  // void stopChartUpdate() {
+  //   chartUpdateTimer?.cancel();
+  // }
+void startChartUpdate() {
+  chartUpdateTimer =
+      Timer.periodic(const Duration(seconds: 2), (_) {
+    _fetchLatestData();
+  });
+}
 
   // ========================================
   // ⭐ Toggle STREAM (Web)

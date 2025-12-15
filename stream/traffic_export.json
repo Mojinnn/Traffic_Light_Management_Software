@@ -1,0 +1,2378 @@
+[
+  {
+    "timestamp": "2025-12-15T02:40:15.820050+00:00",
+    "frame_index": 100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:42:18.547950+00:00",
+    "frame_index": 100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:42:34.517229+00:00",
+    "frame_index": 200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:42:50.970374+00:00",
+    "frame_index": 300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:43:07.865286+00:00",
+    "frame_index": 400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:43:29.724288+00:00",
+    "frame_index": 500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:43:48.366572+00:00",
+    "frame_index": 600,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:44:07.496352+00:00",
+    "frame_index": 700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:44:30.307324+00:00",
+    "frame_index": 800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:44:57.851654+00:00",
+    "frame_index": 900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:45:16.761874+00:00",
+    "frame_index": 1000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:45:32.453197+00:00",
+    "frame_index": 1100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:45:50.274664+00:00",
+    "frame_index": 1200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:46:07.065175+00:00",
+    "frame_index": 1300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:46:27.722821+00:00",
+    "frame_index": 1400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:46:51.038976+00:00",
+    "frame_index": 1500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:47:27.301633+00:00",
+    "frame_index": 1600,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:47:45.072743+00:00",
+    "frame_index": 1700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:48:06.354057+00:00",
+    "frame_index": 1800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:48:27.933822+00:00",
+    "frame_index": 1900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:49:30.840819+00:00",
+    "frame_index": 2000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:49:46.687672+00:00",
+    "frame_index": 2100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:52:31.796307+00:00",
+    "frame_index": 2200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:52:53.481831+00:00",
+    "frame_index": 2300,
+    "total_vehicles": 1,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 1,
+        "proportion_percent": 100.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:53:11.761800+00:00",
+    "frame_index": 2400,
+    "total_vehicles": 1,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 1,
+        "proportion_percent": 100.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:53:30.132801+00:00",
+    "frame_index": 2500,
+    "total_vehicles": 1,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 1,
+        "proportion_percent": 100.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:53:47.614026+00:00",
+    "frame_index": 2600,
+    "total_vehicles": 1,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 1,
+        "proportion_percent": 100.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:54:04.589828+00:00",
+    "frame_index": 2700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:54:22.581263+00:00",
+    "frame_index": 2800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:54:57.285805+00:00",
+    "frame_index": 2900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:55:12.558299+00:00",
+    "frame_index": 3000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:55:31.157326+00:00",
+    "frame_index": 3100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:55:48.249875+00:00",
+    "frame_index": 3200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:56:18.390814+00:00",
+    "frame_index": 3300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:56:47.163781+00:00",
+    "frame_index": 3400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:57:37.115811+00:00",
+    "frame_index": 3500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:57:53.641529+00:00",
+    "frame_index": 3600,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:58:09.126779+00:00",
+    "frame_index": 3700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:58:26.155276+00:00",
+    "frame_index": 3800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:58:49.971751+00:00",
+    "frame_index": 3900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T02:59:14.769627+00:00",
+    "frame_index": 4000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:00:22.208694+00:00",
+    "frame_index": 4100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:00:42.859392+00:00",
+    "frame_index": 4200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:01:08.138821+00:00",
+    "frame_index": 4300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:01:26.308323+00:00",
+    "frame_index": 4400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:01:42.955096+00:00",
+    "frame_index": 4500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:01:59.734426+00:00",
+    "frame_index": 4600,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:02:16.728607+00:00",
+    "frame_index": 4700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:02:35.253410+00:00",
+    "frame_index": 4800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:02:53.503674+00:00",
+    "frame_index": 4900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:03:31.003931+00:00",
+    "frame_index": 5000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:04:00.671017+00:00",
+    "frame_index": 5100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:04:53.585264+00:00",
+    "frame_index": 5200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:05:41.968554+00:00",
+    "frame_index": 5300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:06:02.021454+00:00",
+    "frame_index": 5400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:06:17.670916+00:00",
+    "frame_index": 5500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:15:51.526373+00:00",
+    "frame_index": 100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:16:19.263292+00:00",
+    "frame_index": 200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:16:46.426234+00:00",
+    "frame_index": 300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:17:12.778963+00:00",
+    "frame_index": 400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:17:42.864148+00:00",
+    "frame_index": 500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:18:15.232768+00:00",
+    "frame_index": 600,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:18:48.921449+00:00",
+    "frame_index": 700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:19:21.279156+00:00",
+    "frame_index": 800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:19:53.461830+00:00",
+    "frame_index": 900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:20:26.251303+00:00",
+    "frame_index": 1000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:21:02.768094+00:00",
+    "frame_index": 1100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:21:39.766675+00:00",
+    "frame_index": 1200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:22:14.991987+00:00",
+    "frame_index": 1300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:22:41.351823+00:00",
+    "frame_index": 1400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:23:08.332066+00:00",
+    "frame_index": 1500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:23:34.391936+00:00",
+    "frame_index": 1600,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:24:03.322365+00:00",
+    "frame_index": 1700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:24:44.255794+00:00",
+    "frame_index": 1800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:25:24.637019+00:00",
+    "frame_index": 1900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:26:00.889278+00:00",
+    "frame_index": 2000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:26:37.455156+00:00",
+    "frame_index": 2100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:27:18.142346+00:00",
+    "frame_index": 2200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:27:53.122951+00:00",
+    "frame_index": 2300,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:28:10.805741+00:00",
+    "frame_index": 2400,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:28:32.289920+00:00",
+    "frame_index": 2500,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:28:50.196926+00:00",
+    "frame_index": 2600,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:29:08.555082+00:00",
+    "frame_index": 2700,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:29:25.639956+00:00",
+    "frame_index": 2800,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:29:46.894676+00:00",
+    "frame_index": 2900,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:30:15.828820+00:00",
+    "frame_index": 3000,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:30:34.284572+00:00",
+    "frame_index": 3100,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  },
+  {
+    "timestamp": "2025-12-15T03:30:53.520852+00:00",
+    "frame_index": 3200,
+    "total_vehicles": 0,
+    "lanes": [
+      {
+        "name": "Lane 1",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 2",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 3",
+        "count": 0,
+        "proportion_percent": 0.0
+      },
+      {
+        "name": "Lane 4",
+        "count": 0,
+        "proportion_percent": 0.0
+      }
+    ]
+  }
+]
