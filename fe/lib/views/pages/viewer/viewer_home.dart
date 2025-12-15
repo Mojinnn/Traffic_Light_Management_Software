@@ -130,9 +130,10 @@ class _ViewerHomeState extends State<ViewerHome> {
       print('Error fetching vehicle count: $e');
     }
   }
-  //-----------------------------//
-  // --- Timer cập nhật chart ---//
-  //-----------------------------//
+  //-------------------------------------------------------//
+  // --- Timer cập nhật chart (BIỂU ĐỒ MẬT ĐỘ HƯỚNG XE) ---//
+  //----------------------------- -------------------------//
+
   void startChartUpdate() {
     chartUpdateTimer = Timer.periodic(Duration(seconds: 30), (timer) async {
       await _fetchLatestData();
