@@ -514,7 +514,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
-import 'package:first_flutter/data/auth_service.dart';
+//import 'package:first_flutter/data/auth_service.dart';
 
 // ⭐ THÊM IMPORT CHO WEB
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -537,7 +537,7 @@ class _PoliceViewState extends State<PoliceView> {
 // ================= CLOUD FLARE BASE =================
 static const String baseUrl ='https://involvement-shapes-radiation-netscape.trycloudflare.com';
 
-  final String esp32Ip = '10.10.59.238';
+  //final String esp32Ip = '10.10.59.238';
   
 // ================= STREAM =================
   final String streamViewType = 'police-stream-iframe';
@@ -566,7 +566,10 @@ final String vehicleCountUrl = '$baseUrl/lanes';
     startChartUpdate();
     _fetchLatestData(); // gọi 1 phát để có dữ liệu ngay
   }
-
+  void stopChartUpdate() {
+  chartUpdateTimer?.cancel();
+  chartUpdateTimer = null;
+  }
   @override
   void dispose() {
     stopChartUpdate();
