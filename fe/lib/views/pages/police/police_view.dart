@@ -1043,17 +1043,17 @@ class PoliceView extends StatefulWidget {
 }
 
 class _PoliceViewState extends State<PoliceView> {
-  final String esp32Ip = 'injection-charity-assisted-connection.trycloudflare.com';
+  final String esp32Ip = 'defeat-kelkoo-stay-pencil.trycloudflare.com'; // doilink
   final String streamViewType = 'police-stream-iframe';
 
   // Chart data - 4 lanes
   List<VehicleDataPoint> dataPoints = [];
   int maxDataPoints = 20;
-  Timer? chartUpdateTimer;
+  Timer? chartUpdateTimer;   
 
   // API endpoint thực tế cho lanes
  //final String lanesApiUrl = 'http://10.10.59.238:5000/lanes';
-    final String lanesApiUrl = 'https://injection-charity-assisted-connection.trycloudflare.com/lanes';
+    final String lanesApiUrl = 'https://defeat-kelkoo-stay-pencil.trycloudflare.com/lanes'; //doilink
   // Debug info
   String lastError = '';
   String lastResponse = '';
