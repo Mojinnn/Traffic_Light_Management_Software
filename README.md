@@ -8,17 +8,6 @@ This repository is adapted and extended from an existing traffic system project 
 
 ---
 
-## Objectives
-
-* Manage and control traffic light timing and behavior
-* Monitor traffic density and intersection status
-* Receive real-time data from IoT devices (ESP‑CAM, sensors)
-* Provide a web-based interface for operators
-* Support configurable traffic logic via JSON and database
-* Lay the foundation for AI-based traffic optimization
-
----
-
 ## System Architecture
 
 The system consists of four main components:
@@ -39,7 +28,7 @@ The system consists of four main components:
    * ESP32 / ESP‑CAM devices
    * Uses MQTT to transmit images or traffic data
 
-4. **AI Module (Optional)**
+4. **AI Module**
 
    * Processes camera data
    * Estimates traffic density or detects congestion
